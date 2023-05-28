@@ -1,1 +1,2 @@
-export {sayHello, sayGoodbye} from './hello-world'
+export { initialise } from './comms'
+export { UserCredentials } from './comms'
