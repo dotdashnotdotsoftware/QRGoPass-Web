@@ -24,4 +24,8 @@ import { UserCredentials, initialise } from 'qrgopass'
 
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-initialise((credentials: UserCredentials) => console.log(credentials));
+const session = initialise((credentials: UserCredentials) => {
+  document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
+  document.getElementById('password')!.innerHTML = credentials.password;
+});
+document.getElementById('sessionId')!.innerHTML = session.GUID;
