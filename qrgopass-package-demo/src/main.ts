@@ -1,3 +1,4 @@
+import { FailureReason, QRGoPassFailure } from 'qrgopass/dist/comms';
 import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
@@ -24,8 +25,20 @@ import { UserCredentials, initialise } from 'qrgopass'
 
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-const session = initialise((credentials: UserCredentials) => {
-  document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
-  document.getElementById('password')!.innerHTML = credentials.password;
-});
-document.getElementById('sessionId')!.innerHTML = session.GUID;
+async function main() {
+  const session = await initialise((result: UserCredentials | QRGoPassFailure) => {
+    if ((result as QRGoPassFailure).failureReason) {
+      const failure = result as QRGoPassFailure;
+      if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
+        document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
+      } 
+      console.log(result);
+    } else {
+      const credentials = result as UserCredentials;
+      document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
+      document.getElementById('password')!.innerHTML = credentials.password;
+    }
+  });
+  document.getElementById('sessionId')!.innerHTML = session.UUID;
+}
+main()
