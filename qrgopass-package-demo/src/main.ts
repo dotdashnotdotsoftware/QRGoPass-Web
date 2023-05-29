@@ -5,25 +5,14 @@ import './style.css'
 // import { setupCounter } from './counter.ts'
 import { UserCredentials, initialise } from 'qrgopass'
 
-// document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-//   <div>
-//     <a href="https://vitejs.dev" target="_blank">
-//       <img src="${viteLogo}" class="logo" alt="Vite logo" />
-//     </a>
-//     <a href="https://www.typescriptlang.org/" target="_blank">
-//       <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-//     </a>
-//     <h1>Vite + TypeScript</h1>
-//     <div class="card">
-//       <button id="counter" type="button"></button>
-//     </div>
-//     <p class="read-the-docs">
-//       Click on the Vite and TypeScript logos to learn more
-//     </p>
-//   </div>
-// `
-
-// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const B64ToUrlEncodedB64 = function(input: string): string {
+  // Replace non-url compatible chars with base64 standard chars
+  input = input
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+  // Remove padding characters
+  return input.replace("=", "");
+};
 
 async function main() {
   const session = await initialise((result: UserCredentials | QRGoPassFailure) => {
@@ -40,5 +29,48 @@ async function main() {
     }
   });
   document.getElementById('sessionId')!.innerHTML = session.UUID;
+
+  const jwk: JsonWebKey = {
+    "alg": "RSA-OAEP-256",
+    "e": "AQAB",
+    "ext": true,
+    "key_ops": [
+      "encrypt"
+    ],
+    "kty": "RSA",
+    "n": B64ToUrlEncodedB64(session.PublicKey)
+  }
+
+  console.log(jwk)
+  const publicJWTFoo = await window.crypto.subtle.importKey("jwk", jwk, {
+      name: "RSA-OAEP",
+      hash: "SHA-256"
+  }, true, ["encrypt"]);
+
+  const encrypted = await window.crypto.subtle.encrypt({
+      name: "RSA-OAEP",
+    },
+    publicJWTFoo,
+    new TextEncoder().encode("Banana")
+  );
+
+  console.log(encrypted);
+
+  const FETCH_URL = `https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID=${session.UUID}`;
+  const fakeInfo = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+  const payload = {
+    UUID: session.UUID,
+    V: "1",
+    Data: {
+      User: fakeInfo,
+      Pass: fakeInfo
+    }
+  };
+
+  console.log(JSON.stringify(payload));
+  await fetch(FETCH_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
 }
 main()
