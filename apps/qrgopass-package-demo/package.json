@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "qrgopass": "^0.1.0"
+    "qrgopass-client": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.2",

@@ -1,9 +1,12 @@
 {
-  "name": "qrgopass",
+  "name": "qrgopass-client",
   "version": "0.1.0",
   "description": "Can log \"hello world\" and \"goodbye world\" to the console!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
   "files": [
     "/dist"
   ],

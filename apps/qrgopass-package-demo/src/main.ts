@@ -1,9 +1,8 @@
-import { FailureReason, QRGoPassFailure } from 'qrgopass/dist/comms';
 import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
 // import { setupCounter } from './counter.ts'
-import { UserCredentials, initialise } from 'qrgopass'
+import { FailureReason, QRGoPassFailure, UserCredentials, initialise } from 'qrgopass-client'
 
 const B64ToUrlEncodedB64 = function(input: string): string {
   // Replace non-url compatible chars with base64 standard chars
