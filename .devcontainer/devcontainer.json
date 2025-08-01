@@ -4,7 +4,8 @@
     // Always first to ensure docker starts from a consistent location
     "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
     // The actual devcontainer
-    "${localWorkspaceFolder}/docker/devcontainer/docker-compose.yml"
+    "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
+    "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml"
   ],
 
   "remoteUser": "node",
@@ -14,7 +15,10 @@
 
   "customizations": {
     "vscode": {
-      "extensions": ["TabNine.tabnine-vscode", "firsttris.vscode-jest-runner"]
+      "extensions": ["firsttris.vscode-jest-runner"],
+      "settings": {
+        "files.enableSymlinks": true
+      }
     }
   }
 }

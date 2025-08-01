@@ -1,2 +1,8 @@
 version: "3.9"
-# File just needs to exist to ensure a consistent, refactor safe, initial docker directory
+
+services:
+  dev-container:
+    volumes:
+      # Mount local repo as delegated for performance gains
+      - ../:/workspace:delegated
+      - ../.git/:/workspace/.git:delegated
