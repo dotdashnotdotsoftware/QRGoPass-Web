@@ -1,4 +1,3 @@
-// Tests for converting URL-encoded Base64 to standard Base64
 import { urlEncodedB64ToB64 } from './url-encoded-b64-to-b64';
 import { describe, it, expect } from 'vitest';
 

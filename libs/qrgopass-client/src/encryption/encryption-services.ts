@@ -1,4 +1,5 @@
 import { urlEncodedB64ToB64 } from "../encoding/url-encoded-b64-to-b64";
+import { getUuid } from "./get-uuid";
 
 export class EncryptionServices {
     private constructor(private readonly keyPair: CryptoKeyPair) { }
@@ -37,7 +38,7 @@ export class EncryptionServices {
         }
     }
 
-    readonly getUuid = () => crypto.randomUUID();
+    readonly getUuid = getUuid
 
     readonly getPublicModulus = async () => {
         const publicJWT = await window.crypto.subtle.exportKey("jwk", this.keyPair.publicKey);
