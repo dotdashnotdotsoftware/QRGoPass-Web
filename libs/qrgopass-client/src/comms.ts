@@ -1,4 +1,5 @@
 import { EncryptionServices } from "./encryption/encryption-services";
+import { fetchInterval } from "./fetch-interval";
 
 export type UserCredentials = {
     userIdentifier: string;
@@ -29,63 +30,59 @@ export async function initialise(callback: (result: UserCredentials | QRGoPassFa
     const uuid = encryptionServices.getUuid();
     const publicJWTBase64 = await encryptionServices.getPublicModulus();
 
-    let loopCount = 0;
-    const fetchLoop = async () => {
-        loopCount++;
+    fetchInterval(
+        async () => {
+            const fetchResult = await fetch(FETCH_URL + uuid, {
+                cache: "no-store",
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }
+            );
 
-        if (FETCH_ATTEMPTS <= loopCount) {
+            const response = await fetchResult.json();
+            if (!response) {
+                return false;
+            }
+
+            if (CREDENTIAL_TRANSFER == response.V) {
+                const data = response.Data;
+                const userDecryptPromise = encryptionServices.decrypt(data.User);
+                const passDecryptPromise = encryptionServices.decrypt(data.Pass);
+
+                try {
+                    await Promise.all([userDecryptPromise, passDecryptPromise]);
+                } catch (e) {
+                    console.log("ERROR: Could not decrypt credentials");
+                    return;
+                }
+
+                const loginInfo = {
+                    userIdentifier: await userDecryptPromise,
+                    password: await passDecryptPromise
+                };
+
+                if (!loginInfo.userIdentifier || !loginInfo.password) {
+                    console.log("ERROR: Could not decrypt credentials");
+                    return;
+                }
+                else {
+                    console.log("Successfully decrypted credentials");
+                    callback(loginInfo);
+                }
+                return;
+            } else {
+                console.log("Unsuppored right now");
+                return;
+            }
+        },
+        () => {
             console.log("(Timeout)");
             callback({ failureReason: FailureReason.TRANSFER_TIMEOUT });
-            return;
-        }
-
-        const fetchResult = await fetch(FETCH_URL + uuid, {
-            cache: "no-store",
-            headers: {
-                'Accept': 'application/json'
-            }
-        }
-        );
-
-        const response = await fetchResult.json();
-        if (!response) {
-            console.log("loop");
-            setTimeout(fetchLoop, FETCH_TIMEOUT);
-            return;
-        }
-
-        if (CREDENTIAL_TRANSFER == response.V) {
-            const data = response.Data;
-            const userDecryptPromise = encryptionServices.decrypt(data.User);
-            const passDecryptPromise = encryptionServices.decrypt(data.Pass);
-
-            try {
-                await Promise.all([userDecryptPromise, passDecryptPromise]);
-            } catch (e) {
-                console.log("ERROR: Could not decrypt credentials");
-                return;
-            }
-
-            const loginInfo = {
-                userIdentifier: await userDecryptPromise,
-                password: await passDecryptPromise
-            };
-
-            if (!loginInfo.userIdentifier || !loginInfo.password) {
-                console.log("ERROR: Could not decrypt credentials");
-                return;
-            }
-            else {
-                console.log("Successfully decrypted credentials");
-                callback(loginInfo);
-            }
-            return;
-        } else {
-            console.log("Unsuppored right now");
-            return;
-        }
-    }
-    setTimeout(fetchLoop, FETCH_TIMEOUT);
+        },
+        FETCH_ATTEMPTS,
+        FETCH_TIMEOUT
+    );
 
     return {
         UUID: uuid,
