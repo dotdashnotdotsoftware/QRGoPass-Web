@@ -1,18 +1,4 @@
-const urlEncodedB64ToB64 = function (input) {
-    // Replace non-url compatible chars with base64 standard chars
-    input = input
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-    // Pad out with standard base64 required padding characters
-    var pad = input.length % 4;
-    if (pad) {
-        if (pad === 1) {
-            throw new Error('InvalidLengthError: Input base64url string is the wrong length to determine padding');
-        }
-        input += new Array(5 - pad).join('=');
-    }
-    return input;
-};
+import { urlEncodedB64ToB64 } from "../encoding/url-encoded-b64-to-b64";
 
 export class EncryptionServices {
     private constructor(private readonly keyPair: CryptoKeyPair) { }
