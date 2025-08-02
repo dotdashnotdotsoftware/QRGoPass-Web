@@ -1,3 +1,4 @@
+import { getCredentials } from 'qrgopass-client/dist/comms';
 import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
@@ -14,20 +15,27 @@ const B64ToUrlEncodedB64 = function (input: string): string {
 };
 
 async function main() {
-  const session = await initialise((result: UserCredentials | QRGoPassFailure) => {
-    if ((result as QRGoPassFailure).failureReason) {
-      const failure = result as QRGoPassFailure;
-      if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
-        document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
+  const encryptionServices = await initialise();
+  const uuid = encryptionServices.getUuid();
+  const publicJWTBase64 = await encryptionServices.getPublicModulus();
+  const credentialsPromise = getCredentials(
+    encryptionServices,
+    uuid,
+    publicJWTBase64,
+    (result: UserCredentials | QRGoPassFailure) => {
+      if ((result as QRGoPassFailure).failureReason) {
+        const failure = result as QRGoPassFailure;
+        if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
+          document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
+        }
+        console.log(result);
+      } else {
+        const credentials = result as UserCredentials;
+        document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
+        document.getElementById('password')!.innerHTML = credentials.password;
       }
-      console.log(result);
-    } else {
-      const credentials = result as UserCredentials;
-      document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
-      document.getElementById('password')!.innerHTML = credentials.password;
-    }
-  });
-  document.getElementById('sessionId')!.innerHTML = session.UUID;
+    });
+  document.getElementById('sessionId')!.innerHTML = uuid;
 
   const jwk: JsonWebKey = {
     "alg": "RSA-OAEP-256",
@@ -37,7 +45,7 @@ async function main() {
       "encrypt"
     ],
     "kty": "RSA",
-    "n": B64ToUrlEncodedB64(session.PublicKey)
+    "n": B64ToUrlEncodedB64(publicJWTBase64)
   }
 
   console.log(jwk)
@@ -55,10 +63,10 @@ async function main() {
 
   console.log(encrypted);
 
-  const FETCH_URL = `https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID=${session.UUID}`;
+  const FETCH_URL = `https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID=${uuid}`;
   const fakeInfo = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   const payload = {
-    UUID: session.UUID,
+    UUID: uuid,
     V: "1",
     Data: {
       User: fakeInfo,
@@ -71,5 +79,7 @@ async function main() {
     method: "POST",
     body: JSON.stringify(payload)
   });
+
+  await credentialsPromise;
 }
 main()
