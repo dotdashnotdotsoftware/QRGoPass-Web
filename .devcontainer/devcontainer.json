@@ -8,15 +8,15 @@
     "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",
     "${localWorkspaceFolder}/.devcontainer/common/behaviours/uses-pnpm.yml"
   ],
-
   "remoteUser": "node",
   "workspaceFolder": "/workspace",
   "service": "dev-container",
   "shutdownAction": "stopCompose",
-
   "customizations": {
     "vscode": {
-      "extensions": ["firsttris.vscode-jest-runner"],
+      "extensions": [
+        "vitest.explorer"
+      ],
       "settings": {
         "files.enableSymlinks": true
       }
