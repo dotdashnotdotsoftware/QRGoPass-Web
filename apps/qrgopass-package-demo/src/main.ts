@@ -4,7 +4,7 @@ import './style.css'
 // import { setupCounter } from './counter.ts'
 import { FailureReason, QRGoPassFailure, UserCredentials, initialise } from 'qrgopass-client'
 
-const B64ToUrlEncodedB64 = function(input: string): string {
+const B64ToUrlEncodedB64 = function (input: string): string {
   // Replace non-url compatible chars with base64 standard chars
   input = input
     .replace(/\+/g, '-')
@@ -19,7 +19,7 @@ async function main() {
       const failure = result as QRGoPassFailure;
       if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
         document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
-      } 
+      }
       console.log(result);
     } else {
       const credentials = result as UserCredentials;
@@ -42,13 +42,13 @@ async function main() {
 
   console.log(jwk)
   const publicJWTFoo = await window.crypto.subtle.importKey("jwk", jwk, {
-      name: "RSA-OAEP",
-      hash: "SHA-256"
+    name: "RSA-OAEP",
+    hash: "SHA-256"
   }, true, ["encrypt"]);
 
   const encrypted = await window.crypto.subtle.encrypt({
-      name: "RSA-OAEP",
-    },
+    name: "RSA-OAEP",
+  },
     publicJWTFoo,
     new TextEncoder().encode("Banana")
   );
