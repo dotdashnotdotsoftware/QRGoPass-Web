@@ -25,64 +25,66 @@ export async function initialise(callback: (result: UserCredentials | QRGoPassFa
     const FETCH_ATTEMPTS = 4;
     const CREDENTIAL_TRANSFER = 1;
 
-
     const encryptionServices = await EncryptionServices.createAsync();
     const uuid = encryptionServices.getUuid();
     const publicJWTBase64 = await encryptionServices.getPublicModulus();
 
-    fetchInterval(
-        async () => {
-            const fetchResult = await fetch(FETCH_URL + uuid, {
-                cache: "no-store",
-                headers: {
-                    'Accept': 'application/json'
+    try {
+        await fetchInterval(
+            async () => {
+                const fetchResult = await fetch(FETCH_URL + uuid, {
+                    cache: "no-store",
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 }
-            }
-            );
+                );
 
-            const response = await fetchResult.json();
-            if (!response) {
-                return false;
-            }
+                const response = await fetchResult.json();
+                if (!response) {
+                    return false;
+                }
 
-            if (CREDENTIAL_TRANSFER == response.V) {
-                const data = response.Data;
-                const userDecryptPromise = encryptionServices.decrypt(data.User);
-                const passDecryptPromise = encryptionServices.decrypt(data.Pass);
+                if (CREDENTIAL_TRANSFER == response.V) {
+                    const data = response.Data;
+                    const userDecryptPromise = encryptionServices.decrypt(data.User);
+                    const passDecryptPromise = encryptionServices.decrypt(data.Pass);
 
-                try {
-                    await Promise.all([userDecryptPromise, passDecryptPromise]);
-                } catch (e) {
-                    console.log("ERROR: Could not decrypt credentials");
+                    try {
+                        await Promise.all([userDecryptPromise, passDecryptPromise]);
+                    } catch (e) {
+                        console.log("ERROR: Could not decrypt credentials");
+                        return;
+                    }
+
+                    const loginInfo = {
+                        userIdentifier: await userDecryptPromise,
+                        password: await passDecryptPromise
+                    };
+
+                    if (!loginInfo.userIdentifier || !loginInfo.password) {
+                        console.log("ERROR: Could not decrypt credentials");
+                        return;
+                    }
+                    else {
+                        console.log("Successfully decrypted credentials");
+                        callback(loginInfo);
+                    }
+                    return;
+                } else {
+                    console.log("Unsuppored right now");
                     return;
                 }
-
-                const loginInfo = {
-                    userIdentifier: await userDecryptPromise,
-                    password: await passDecryptPromise
-                };
-
-                if (!loginInfo.userIdentifier || !loginInfo.password) {
-                    console.log("ERROR: Could not decrypt credentials");
-                    return;
-                }
-                else {
-                    console.log("Successfully decrypted credentials");
-                    callback(loginInfo);
-                }
-                return;
-            } else {
-                console.log("Unsuppored right now");
-                return;
-            }
-        },
-        () => {
+            },
+            FETCH_ATTEMPTS,
+            FETCH_TIMEOUT
+        );
+    } catch (e) {
+        if (e === "TOO_MANY_LOOPS") {
             console.log("(Timeout)");
             callback({ failureReason: FailureReason.TRANSFER_TIMEOUT });
-        },
-        FETCH_ATTEMPTS,
-        FETCH_TIMEOUT
-    );
+        }
+    }
 
     return {
         UUID: uuid,

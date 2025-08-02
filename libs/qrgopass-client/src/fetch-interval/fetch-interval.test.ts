@@ -20,7 +20,7 @@ describe('fetchInterval', () => {
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(endValue);
 
-        fetchInterval(mockCallback, vi.fn(), 10, 1000);
+        const fetchIntervalPromise = fetchInterval(mockCallback, 10, 1000);
 
         await vi.advanceTimersByTimeAsync(1000);
         expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -33,14 +33,15 @@ describe('fetchInterval', () => {
 
         await vi.advanceTimersByTimeAsync(1000);
         expect(mockCallback).toHaveBeenCalledTimes(3);
+
+        await expect(fetchIntervalPromise).resolves.toBeUndefined();
     });
 
     it(`should stop calling the callback after max iterations
         because it should not keep looping forever`, async () => {
         const mockCallback = vi.fn().mockResolvedValue(false);
-        const mockTooManyLoopsCallback = vi.fn();
 
-        fetchInterval(mockCallback, mockTooManyLoopsCallback, 3, 1000);
+        const fetchIntervalPromise = fetchInterval(mockCallback, 3, 1000);
 
         await vi.advanceTimersByTimeAsync(1000);
         expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -50,6 +51,6 @@ describe('fetchInterval', () => {
         expect(mockCallback).toHaveBeenCalledTimes(3);
         await vi.advanceTimersByTimeAsync(1000);
         expect(mockCallback).toHaveBeenCalledTimes(3);
-        expect(mockTooManyLoopsCallback).toHaveBeenCalledTimes(1);
+        expect(fetchIntervalPromise).rejects.toBe("TOO_MANY_LOOPS");
     });
 });
