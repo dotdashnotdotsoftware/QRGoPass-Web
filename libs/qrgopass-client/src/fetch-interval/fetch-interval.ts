@@ -1,25 +1,25 @@
 export const TOO_MANY_LOOPS = "TOO_MANY_LOOPS";
 
 export const fetchInterval = (
-    callback: () => Promise<boolean | undefined>,
+    callback: () => Promise<{ done: false } | { done: true, result: any }>,
     maxIterations: number,
     delay: number) => {
     let loopCount = 0;
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
         const fetchLoop = async () => {
             loopCount++;
 
-            const taskComplete = await callback();
-            console.log(`Loop count: ${loopCount}, Task complete: ${taskComplete}, Max iterations: ${maxIterations}`);
-            if (taskComplete === false) {
+            const result = await callback();
+
+            if (result.done === false) {
                 if (loopCount < maxIterations) {
                     setTimeout(fetchLoop, delay);
                 } else {
                     reject(TOO_MANY_LOOPS);
                 }
             } else {
-                resolve();
+                resolve(result.result);
             }
         }
         setTimeout(fetchLoop, delay);
