@@ -1,7 +1,8 @@
 import { EncryptionServices } from "../../encryption/encryption-services";
 import { UserCredentials, QRGoPassFailure, FailureReason } from "../../types";
+import { IResponseHandler } from "../i-response-handler";
 
-export class UserCredentialsHandler {
+export class UserCredentialsHandler implements IResponseHandler {
     constructor(private readonly encryptionServices: EncryptionServices) { }
 
     public async handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure> {

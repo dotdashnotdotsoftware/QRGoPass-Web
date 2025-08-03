@@ -3,6 +3,8 @@ import { EncryptionServices } from "./encryption/encryption-services";
 import { IRemote } from "./remotes/i-remote";
 import { AwsRemote } from "./remotes/aws";
 import { UserCredentialsHandler } from "./response-handling/user-credentials-handler";
+import { IResponseHandler } from "./response-handling/i-response-handler";
+import { FailureHandler } from "./response-handling/failure-handler";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -18,7 +20,7 @@ export async function initialise(): Promise<QRGoPassSession> {
 }
 
 export class QRGoPassSession {
-    private readonly userCredentialsHandler;
+    private readonly responseHandler: IResponseHandler;
 
     constructor(
         encryptionServices: EncryptionServices,
@@ -26,16 +28,13 @@ export class QRGoPassSession {
         readonly base64EncodedPublicKey: string,
         private readonly remote: IRemote
     ) {
-        this.userCredentialsHandler = new UserCredentialsHandler(encryptionServices);
+        this.responseHandler = new FailureHandler(
+            new UserCredentialsHandler(encryptionServices)
+        );
     }
 
     public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
         const remoteResponse = await this.remote.getResponse();
-
-        if (isQRGoPassFailure(remoteResponse)) {
-            return remoteResponse as QRGoPassFailure;
-        }
-
-        return await this.userCredentialsHandler.handleResponse(remoteResponse);
+        return this.responseHandler.handleResponse(remoteResponse);
     }
 }
