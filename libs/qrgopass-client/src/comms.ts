@@ -1,24 +1,31 @@
 import { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } from "./types";
 import { EncryptionServices } from "./encryption/encryption-services";
-import { fetchInterval } from "./fetch-interval";
+import { IRemote } from "./remotes/i-remote";
+import { AwsRemote } from "./remotes/aws/aws-remote";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
     const base64EncodedPublicKey = await encryptionServices.getPublicModulus();
     const uuid = encryptionServices.getUuid();
 
-    return new QRGoPassSession(encryptionServices, uuid, base64EncodedPublicKey);
+    return new QRGoPassSession(
+        encryptionServices,
+        uuid,
+        base64EncodedPublicKey,
+        new AwsRemote(uuid)
+    );
 }
 
 export class QRGoPassSession {
     constructor(
         private readonly encryptionServices: EncryptionServices,
         readonly uuid: string,
-        readonly base64EncodedPublicKey: string
+        readonly base64EncodedPublicKey: string,
+        private readonly remote: IRemote
     ) { }
 
     public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
-        const remoteResponse = await getRemoteResponse(this.uuid);
+        const remoteResponse = await this.remote.getResponse();
 
         if (isQRGoPassFailure(remoteResponse)) {
             return remoteResponse as QRGoPassFailure;
@@ -27,52 +34,6 @@ export class QRGoPassSession {
         return await getCredentials(this.encryptionServices, remoteResponse);
     }
 }
-
-
-async function getRemoteResponse(uuid: string): Promise<any | QRGoPassFailure> {
-    const FETCH_URL = "https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID="
-    const FETCH_TIMEOUT = 3000;
-    const FETCH_ATTEMPTS = 4;
-
-    try {
-        const response = await fetchInterval(
-            async () => {
-                const fetchResult = await fetch(FETCH_URL + uuid, {
-                    cache: "no-store",
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                }
-                );
-
-                const response = await fetchResult.json();
-                if (!response) {
-                    return {
-                        done: false
-                    };
-                } else {
-                    return {
-                        done: true,
-                        result: response
-                    }
-                }
-            },
-            FETCH_ATTEMPTS,
-            FETCH_TIMEOUT
-        );
-
-        return response;
-    } catch (e) {
-        if (e === "TOO_MANY_LOOPS") {
-            console.log("(Timeout)");
-            return { failureReason: FailureReason.TRANSFER_TIMEOUT };
-        }
-
-        console.error("Error fetching remote response", e);
-        return { failureReason: FailureReason.UNKNOWN_ERROR };
-    }
-}
-
 
 async function getCredentials(encryptionServices: EncryptionServices, response: any): Promise<UserCredentials | QRGoPassFailure> {
     const CREDENTIAL_TRANSFER = 1;
