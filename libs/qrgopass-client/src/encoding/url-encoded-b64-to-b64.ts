@@ -1,4 +1,4 @@
-export const urlEncodedB64ToB64 = function (input) {
+export const urlEncodedB64ToB64 = function (input: string): string {
     // Replace non-url compatible chars with base64 standard chars
     input = input
         .replace(/-/g, '+')

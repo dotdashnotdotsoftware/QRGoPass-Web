@@ -16,12 +16,27 @@ export type QRGoPassFailure = {
     failureReason: FailureReason;
 }
 
-export async function initialise(): Promise<EncryptionServices> {
-    return await EncryptionServices.createAsync();
+export async function initialise(): Promise<QRGoPassSession> {
+    const encryptionServices = await EncryptionServices.createAsync();
+    const base64EncodedPublicKey = await encryptionServices.getPublicModulus();
+    const uuid = encryptionServices.getUuid();
+
+    return new QRGoPassSession(encryptionServices, uuid, base64EncodedPublicKey);
 }
 
+export class QRGoPassSession {
+    constructor(
+        private readonly encryptionServices: EncryptionServices,
+        readonly uuid: string,
+        readonly base64EncodedPublicKey: string
+    ) { }
 
-export async function getCredentials(encryptionServices: EncryptionServices, uuid: string): Promise<UserCredentials | QRGoPassFailure> {
+    public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
+        return await getCredentials(this.encryptionServices, this.uuid);
+    }
+}
+
+async function getCredentials(encryptionServices: EncryptionServices, uuid: string): Promise<UserCredentials | QRGoPassFailure> {
     const FETCH_URL = "https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID="
     const FETCH_TIMEOUT = 3000;
     const FETCH_ATTEMPTS = 4;

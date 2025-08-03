@@ -1,4 +1,3 @@
-import { getCredentials } from 'qrgopass-client/dist/comms';
 import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
@@ -15,13 +14,9 @@ const B64ToUrlEncodedB64 = function (input: string): string {
 };
 
 async function main() {
-  const encryptionServices = await initialise();
-  const uuid = encryptionServices.getUuid();
-  const publicJWTBase64 = await encryptionServices.getPublicModulus();
-  const credentialsPromise = getCredentials(
-    encryptionServices,
-    uuid);
-  document.getElementById('sessionId')!.innerHTML = uuid;
+  const qrGoPassSession = await initialise();
+  const credentialsPromise = qrGoPassSession.getCredentials();
+  document.getElementById('sessionId')!.innerHTML = qrGoPassSession.uuid;
 
   const jwk: JsonWebKey = {
     "alg": "RSA-OAEP-256",
@@ -31,7 +26,7 @@ async function main() {
       "encrypt"
     ],
     "kty": "RSA",
-    "n": B64ToUrlEncodedB64(publicJWTBase64)
+    "n": B64ToUrlEncodedB64(qrGoPassSession.base64EncodedPublicKey),
   }
 
   console.log(jwk)
@@ -49,10 +44,10 @@ async function main() {
 
   console.log(encrypted);
 
-  const FETCH_URL = `https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID=${uuid}`;
+  const FETCH_URL = `https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID=${qrGoPassSession.uuid}`;
   const fakeInfo = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   const payload = {
-    UUID: uuid,
+    UUID: qrGoPassSession.uuid,
     V: "1",
     Data: {
       User: fakeInfo,
