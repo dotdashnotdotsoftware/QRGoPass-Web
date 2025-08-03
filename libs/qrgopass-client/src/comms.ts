@@ -1,7 +1,7 @@
 import { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } from "./types";
 import { EncryptionServices } from "./encryption/encryption-services";
 import { IRemote } from "./remotes/i-remote";
-import { AwsRemote } from "./remotes/aws/aws-remote";
+import { AwsRemote } from "./remotes/aws";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
