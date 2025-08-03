@@ -2,7 +2,7 @@ import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
 // import { setupCounter } from './counter.ts'
-import { FailureReason, QRGoPassFailure, UserCredentials, initialise } from 'qrgopass-client'
+import { FailureReason, QRGoPassFailure, UserCredentials, initialise, isQRGoPassFailure } from 'qrgopass-client'
 
 const B64ToUrlEncodedB64 = function (input: string): string {
   // Replace non-url compatible chars with base64 standard chars
@@ -67,7 +67,7 @@ async function main() {
 
   const result = await credentialsPromise;
 
-  if ((result as QRGoPassFailure).failureReason) {
+  if (isQRGoPassFailure(result)) {
     const failure = result as QRGoPassFailure;
     if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
       document.getElementById('sessionId')!.innerHTML = "TIMED OUT";

@@ -1,21 +1,6 @@
+import { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } from "./types";
 import { EncryptionServices } from "./encryption/encryption-services";
 import { fetchInterval } from "./fetch-interval";
-
-export type UserCredentials = {
-    userIdentifier: string;
-    password: string;
-}
-
-export enum FailureReason {
-    TRANSFER_TIMEOUT = -1,
-    DECRYPTION_FAILURE = -2,
-    UNSUPPORTED_VERSION = -3,
-    UNKNOWN_ERROR = -4
-}
-
-export type QRGoPassFailure = {
-    failureReason: FailureReason;
-}
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -35,7 +20,7 @@ export class QRGoPassSession {
     public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
         const remoteResponse = await getRemoteResponse(this.uuid);
 
-        if ((remoteResponse as QRGoPassFailure).failureReason) {
+        if (isQRGoPassFailure(remoteResponse)) {
             return remoteResponse as QRGoPassFailure;
         }
 
