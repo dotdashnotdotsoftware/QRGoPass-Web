@@ -21,7 +21,7 @@ export async function initialise(): Promise<EncryptionServices> {
 }
 
 
-export async function getCredentials(encryptionServices: EncryptionServices, uuid: string, callback: (result: UserCredentials | QRGoPassFailure) => void): Promise<EncryptionServices> {
+export async function getCredentials(encryptionServices: EncryptionServices, uuid: string): Promise<UserCredentials | QRGoPassFailure> {
     const FETCH_URL = "https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID="
     const FETCH_TIMEOUT = 3000;
     const FETCH_ATTEMPTS = 4;
@@ -63,34 +63,30 @@ export async function getCredentials(encryptionServices: EncryptionServices, uui
                 await Promise.all([userDecryptPromise, passDecryptPromise]);
             } catch (e) {
                 console.log("ERROR: Could not decrypt credentials");
-                callback({ failureReason: FailureReason.DECRYPTION_FAILURE });
-                return;
+                return { failureReason: FailureReason.DECRYPTION_FAILURE };
             }
 
             const loginInfo = {
                 userIdentifier: await userDecryptPromise,
                 password: await passDecryptPromise
-            };
+            } satisfies UserCredentials;
 
             if (!loginInfo.userIdentifier || !loginInfo.password) {
                 console.log("ERROR: Could not decrypt credentials");
-                callback({ failureReason: FailureReason.DECRYPTION_FAILURE });
-                return;
+                return { failureReason: FailureReason.DECRYPTION_FAILURE };
             }
             else {
                 console.log("Successfully decrypted credentials");
-                callback(loginInfo);
-                return;
+                return loginInfo;
             }
         } else {
             console.log("Unsuppored right now");
-            callback({ failureReason: FailureReason.UNSUPPORTED_VERSION });
-            return;
+            return { failureReason: FailureReason.UNSUPPORTED_VERSION };
         }
     } catch (e) {
         if (e === "TOO_MANY_LOOPS") {
             console.log("(Timeout)");
-            callback({ failureReason: FailureReason.TRANSFER_TIMEOUT });
+            return { failureReason: FailureReason.TRANSFER_TIMEOUT };
         }
     }
 }

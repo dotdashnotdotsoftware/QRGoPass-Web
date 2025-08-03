@@ -20,20 +20,7 @@ async function main() {
   const publicJWTBase64 = await encryptionServices.getPublicModulus();
   const credentialsPromise = getCredentials(
     encryptionServices,
-    uuid,
-    (result: UserCredentials | QRGoPassFailure) => {
-      if ((result as QRGoPassFailure).failureReason) {
-        const failure = result as QRGoPassFailure;
-        if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
-          document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
-        }
-        console.log(result);
-      } else {
-        const credentials = result as UserCredentials;
-        document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
-        document.getElementById('password')!.innerHTML = credentials.password;
-      }
-    });
+    uuid);
   document.getElementById('sessionId')!.innerHTML = uuid;
 
   const jwk: JsonWebKey = {
@@ -74,11 +61,27 @@ async function main() {
   };
 
   console.log(JSON.stringify(payload));
-  await fetch(FETCH_URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
+  try {
+    await fetch(FETCH_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.error("Error posting credentials", e);
+  }
 
-  await credentialsPromise;
+  const result = await credentialsPromise;
+
+  if ((result as QRGoPassFailure).failureReason) {
+    const failure = result as QRGoPassFailure;
+    if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
+      document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
+    }
+    console.log(result);
+  } else {
+    const credentials = result as UserCredentials;
+    document.getElementById('userIdentifier')!.innerHTML = credentials.userIdentifier;
+    document.getElementById('password')!.innerHTML = credentials.password;
+  }
 }
 main()
