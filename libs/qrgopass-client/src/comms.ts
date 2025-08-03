@@ -10,6 +10,7 @@ export enum FailureReason {
     TRANSFER_TIMEOUT = -1,
     DECRYPTION_FAILURE = -2,
     UNSUPPORTED_VERSION = -3,
+    UNKNOWN_ERROR = -4
 }
 
 export type QRGoPassFailure = {
@@ -32,15 +33,21 @@ export class QRGoPassSession {
     ) { }
 
     public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
-        return await getCredentials(this.encryptionServices, this.uuid);
+        const remoteResponse = await getRemoteResponse(this.uuid);
+
+        if ((remoteResponse as QRGoPassFailure).failureReason) {
+            return remoteResponse as QRGoPassFailure;
+        }
+
+        return await getCredentials(this.encryptionServices, remoteResponse);
     }
 }
 
-async function getCredentials(encryptionServices: EncryptionServices, uuid: string): Promise<UserCredentials | QRGoPassFailure> {
+
+async function getRemoteResponse(uuid: string): Promise<any | QRGoPassFailure> {
     const FETCH_URL = "https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID="
     const FETCH_TIMEOUT = 3000;
     const FETCH_ATTEMPTS = 4;
-    const CREDENTIAL_TRANSFER = 1;
 
     try {
         const response = await fetchInterval(
@@ -69,6 +76,23 @@ async function getCredentials(encryptionServices: EncryptionServices, uuid: stri
             FETCH_TIMEOUT
         );
 
+        return response;
+    } catch (e) {
+        if (e === "TOO_MANY_LOOPS") {
+            console.log("(Timeout)");
+            return { failureReason: FailureReason.TRANSFER_TIMEOUT };
+        }
+
+        console.error("Error fetching remote response", e);
+        return { failureReason: FailureReason.UNKNOWN_ERROR };
+    }
+}
+
+
+async function getCredentials(encryptionServices: EncryptionServices, response: any): Promise<UserCredentials | QRGoPassFailure> {
+    const CREDENTIAL_TRANSFER = 1;
+
+    try {
         if (CREDENTIAL_TRANSFER == response.V) {
             const data = response.Data;
             const userDecryptPromise = encryptionServices.decrypt(data.User);
@@ -99,9 +123,7 @@ async function getCredentials(encryptionServices: EncryptionServices, uuid: stri
             return { failureReason: FailureReason.UNSUPPORTED_VERSION };
         }
     } catch (e) {
-        if (e === "TOO_MANY_LOOPS") {
-            console.log("(Timeout)");
-            return { failureReason: FailureReason.TRANSFER_TIMEOUT };
-        }
+        console.error("Error processing remote response", e);
+        return { failureReason: FailureReason.UNKNOWN_ERROR };
     }
 }
