@@ -2,6 +2,7 @@ import { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } fr
 import { EncryptionServices } from "./encryption/encryption-services";
 import { IRemote } from "./remotes/i-remote";
 import { AwsRemote } from "./remotes/aws";
+import { UserCredentialsHandler } from "./response-handling/user-credentials-handler";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -17,12 +18,16 @@ export async function initialise(): Promise<QRGoPassSession> {
 }
 
 export class QRGoPassSession {
+    private readonly userCredentialsHandler;
+
     constructor(
-        private readonly encryptionServices: EncryptionServices,
+        encryptionServices: EncryptionServices,
         readonly uuid: string,
         readonly base64EncodedPublicKey: string,
         private readonly remote: IRemote
-    ) { }
+    ) {
+        this.userCredentialsHandler = new UserCredentialsHandler(encryptionServices);
+    }
 
     public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
         const remoteResponse = await this.remote.getResponse();
@@ -31,45 +36,6 @@ export class QRGoPassSession {
             return remoteResponse as QRGoPassFailure;
         }
 
-        return await getCredentials(this.encryptionServices, remoteResponse);
-    }
-}
-
-async function getCredentials(encryptionServices: EncryptionServices, response: any): Promise<UserCredentials | QRGoPassFailure> {
-    const CREDENTIAL_TRANSFER = 1;
-
-    try {
-        if (CREDENTIAL_TRANSFER == response.V) {
-            const data = response.Data;
-            const userDecryptPromise = encryptionServices.decrypt(data.User);
-            const passDecryptPromise = encryptionServices.decrypt(data.Pass);
-
-            try {
-                await Promise.all([userDecryptPromise, passDecryptPromise]);
-            } catch (e) {
-                console.log("ERROR: Could not decrypt credentials");
-                return { failureReason: FailureReason.DECRYPTION_FAILURE };
-            }
-
-            const loginInfo = {
-                userIdentifier: await userDecryptPromise,
-                password: await passDecryptPromise
-            } satisfies UserCredentials;
-
-            if (!loginInfo.userIdentifier || !loginInfo.password) {
-                console.log("ERROR: Could not decrypt credentials");
-                return { failureReason: FailureReason.DECRYPTION_FAILURE };
-            }
-            else {
-                console.log("Successfully decrypted credentials");
-                return loginInfo;
-            }
-        } else {
-            console.log("Unsuppored right now");
-            return { failureReason: FailureReason.UNSUPPORTED_VERSION };
-        }
-    } catch (e) {
-        console.error("Error processing remote response", e);
-        return { failureReason: FailureReason.UNKNOWN_ERROR };
+        return await this.userCredentialsHandler.handleResponse(remoteResponse);
     }
 }
