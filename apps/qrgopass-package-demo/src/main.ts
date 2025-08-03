@@ -21,7 +21,6 @@ async function main() {
   const credentialsPromise = getCredentials(
     encryptionServices,
     uuid,
-    publicJWTBase64,
     (result: UserCredentials | QRGoPassFailure) => {
       if ((result as QRGoPassFailure).failureReason) {
         const failure = result as QRGoPassFailure;

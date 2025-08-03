@@ -7,7 +7,9 @@ export type UserCredentials = {
 }
 
 export enum FailureReason {
-    TRANSFER_TIMEOUT = -1
+    TRANSFER_TIMEOUT = -1,
+    DECRYPTION_FAILURE = -2,
+    UNSUPPORTED_VERSION = -3,
 }
 
 export type QRGoPassFailure = {
@@ -19,7 +21,7 @@ export async function initialise(): Promise<EncryptionServices> {
 }
 
 
-export async function getCredentials(encryptionServices: EncryptionServices, uuid: string, publicJWTBase64: any, callback: (result: UserCredentials | QRGoPassFailure) => void): Promise<EncryptionServices> {
+export async function getCredentials(encryptionServices: EncryptionServices, uuid: string, callback: (result: UserCredentials | QRGoPassFailure) => void): Promise<EncryptionServices> {
     const FETCH_URL = "https://azk4l4g8we.execute-api.us-east-2.amazonaws.com/Prod?UUID="
     const FETCH_TIMEOUT = 3000;
     const FETCH_ATTEMPTS = 4;
@@ -61,6 +63,7 @@ export async function getCredentials(encryptionServices: EncryptionServices, uui
                 await Promise.all([userDecryptPromise, passDecryptPromise]);
             } catch (e) {
                 console.log("ERROR: Could not decrypt credentials");
+                callback({ failureReason: FailureReason.DECRYPTION_FAILURE });
                 return;
             }
 
@@ -71,15 +74,17 @@ export async function getCredentials(encryptionServices: EncryptionServices, uui
 
             if (!loginInfo.userIdentifier || !loginInfo.password) {
                 console.log("ERROR: Could not decrypt credentials");
+                callback({ failureReason: FailureReason.DECRYPTION_FAILURE });
                 return;
             }
             else {
                 console.log("Successfully decrypted credentials");
                 callback(loginInfo);
+                return;
             }
-            return;
         } else {
             console.log("Unsuppored right now");
+            callback({ failureReason: FailureReason.UNSUPPORTED_VERSION });
             return;
         }
     } catch (e) {
