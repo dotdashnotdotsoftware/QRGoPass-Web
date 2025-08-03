@@ -5,6 +5,7 @@ import { AwsRemote } from "./remotes/aws";
 import { UserCredentialsHandler } from "./response-handling/user-credentials-handler";
 import { IResponseHandler } from "./response-handling/i-response-handler";
 import { FailureHandler } from "./response-handling/failure-handler";
+import { ExceptionHandler } from "./response-handling/exception-handler/exception-handler";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -28,8 +29,10 @@ export class QRGoPassSession {
         readonly base64EncodedPublicKey: string,
         private readonly remote: IRemote
     ) {
-        this.responseHandler = new FailureHandler(
-            new UserCredentialsHandler(encryptionServices)
+        this.responseHandler = new ExceptionHandler(
+            new FailureHandler(
+                new UserCredentialsHandler(encryptionServices)
+            )
         );
     }
 
