@@ -5,7 +5,7 @@ export class VersionHandler implements IResponseHandler {
     constructor(private readonly handlers: Record<number, IResponseHandler>) { }
 
     public async handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure> {
-        const handler = this.handlers[response.V];
+        const handler = this.handlers[Number(response.V)];
 
         if (!handler) {
             console.log("Unsuppored right now");

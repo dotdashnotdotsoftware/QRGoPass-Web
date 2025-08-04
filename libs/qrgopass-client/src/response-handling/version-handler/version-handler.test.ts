@@ -12,13 +12,13 @@ const IResponseHandlerFactory = {
 }
 
 describe('VersionHandler', () => {
-    it(`should call the mapped handler if it exists
-        because the role of this code is to map codes to handlers`, () => {
+    it.each([1, "1"])(`should call the mapped handler if it exists
+        because the role of this code is to map codes to handlers`, (key) => {
         const mockResponse = { V: 1, some: "response" };
         const decoratedHandler = IResponseHandlerFactory.returnsWhatItIsGiven();
 
         const testObject = new VersionHandler({
-            1: decoratedHandler
+            [key]: decoratedHandler
         });
 
         const result = testObject.handleResponse(mockResponse)
