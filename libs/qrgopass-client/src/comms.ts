@@ -2,10 +2,11 @@ import { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } fr
 import { EncryptionServices } from "./encryption/encryption-services";
 import { IRemote } from "./remotes/i-remote";
 import { AwsRemote } from "./remotes/aws";
-import { UserCredentialsHandler } from "./response-handling/user-credentials-handler";
+import { CREDENTIAL_TRANSFER, UserCredentialsHandler } from "./response-handling/user-credentials-handler";
 import { IResponseHandler } from "./response-handling/i-response-handler";
 import { FailureHandler } from "./response-handling/failure-handler";
 import { ExceptionHandler } from "./response-handling/exception-handler";
+import { VersionHandler } from "./response-handling/version-handler";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -31,7 +32,9 @@ export class QRGoPassSession {
     ) {
         this.responseHandler = new ExceptionHandler(
             new FailureHandler(
-                new UserCredentialsHandler(encryptionServices)
+                new VersionHandler({
+                    [CREDENTIAL_TRANSFER]: new UserCredentialsHandler(encryptionServices)
+                }),
             )
         );
     }
