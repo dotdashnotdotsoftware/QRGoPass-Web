@@ -7,6 +7,7 @@ import { IResponseHandler } from "./response-handling/i-response-handler";
 import { FailureHandler } from "./response-handling/failure-handler";
 import { ExceptionHandler } from "./response-handling/exception-handler";
 import { VersionHandler } from "./response-handling/version-handler";
+import { ParanoiaHandler } from "./response-handling/paranoia-handler/paranoia-handler";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -32,9 +33,12 @@ export class QRGoPassSession {
     ) {
         this.responseHandler = new ExceptionHandler(
             new FailureHandler(
-                new VersionHandler({
-                    [CREDENTIAL_TRANSFER]: new UserCredentialsHandler(encryptionServices)
-                }),
+                new ParanoiaHandler(
+                    new VersionHandler({
+                        [CREDENTIAL_TRANSFER]: new UserCredentialsHandler(encryptionServices)
+                    }),
+                    uuid
+                ),
             )
         );
     }

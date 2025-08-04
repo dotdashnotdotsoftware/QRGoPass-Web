@@ -8,7 +8,8 @@ export enum FailureReason {
     TRANSFER_TIMEOUT = -1,
     DECRYPTION_FAILURE = -2,
     UNSUPPORTED_VERSION = -3,
-    UNKNOWN_ERROR = -4
+    UNKNOWN_ERROR = -4,
+    SUSPICIOUS_ACTIVITY = -5
 }
 
 export type QRGoPassFailure = {
