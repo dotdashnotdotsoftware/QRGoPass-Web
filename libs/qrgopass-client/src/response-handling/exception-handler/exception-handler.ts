@@ -1,10 +1,10 @@
-import { UserCredentials, QRGoPassFailure, FailureReason } from "../../types";
+import { FailureReason } from "../../types";
 import { IResponseHandler } from "../i-response-handler";
 
 export class ExceptionHandler implements IResponseHandler {
     constructor(private readonly decorated: IResponseHandler) { }
 
-    public async handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure> {
+    public async handleResponse(response: any): ReturnType<IResponseHandler["handleResponse"]> {
         try {
             return await this.decorated.handleResponse(response);
         } catch (e) {

@@ -1,10 +1,10 @@
-import { UserCredentials, QRGoPassFailure, isQRGoPassFailure, FailureReason } from "../../types";
+import { FailureReason } from "../../types";
 import { IResponseHandler } from "../i-response-handler";
 
 export class ParanoiaHandler implements IResponseHandler {
     constructor(private readonly decorated: IResponseHandler, private readonly uuid: string) { }
 
-    public async handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure> {
+    public async handleResponse(response: any): ReturnType<IResponseHandler["handleResponse"]> {
         if (response.UUID !== this.uuid) {
             console.warn(`Suspicious activity detected: UUID mismatch. Expected ${this.uuid}, got ${response.uuid}`);
             return { failureReason: FailureReason.SUSPICIOUS_ACTIVITY };
