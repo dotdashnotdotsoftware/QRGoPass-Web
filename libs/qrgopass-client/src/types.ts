@@ -4,6 +4,10 @@ export type UserCredentials = {
     password: string;
 }
 
+export type BackupKey = {
+    keyInfo: string;
+}
+
 export enum FailureReason {
     TRANSFER_TIMEOUT = -1,
     DECRYPTION_FAILURE = -2,

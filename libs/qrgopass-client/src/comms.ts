@@ -8,6 +8,7 @@ import { FailureHandler } from "./response-handling/failure-handler";
 import { ExceptionHandler } from "./response-handling/exception-handler";
 import { VersionHandler } from "./response-handling/version-handler";
 import { ParanoiaHandler } from "./response-handling/paranoia-handler/paranoia-handler";
+import { BACKUP_KEY_TRANSFER, BackupKeyHandler } from "./response-handling/backup-key-transfer";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -35,7 +36,8 @@ export class QRGoPassSession {
             new FailureHandler(
                 new ParanoiaHandler(
                     new VersionHandler({
-                        [CREDENTIAL_TRANSFER]: new UserCredentialsHandler(encryptionServices)
+                        [CREDENTIAL_TRANSFER]: new UserCredentialsHandler(encryptionServices),
+                        [BACKUP_KEY_TRANSFER]: new BackupKeyHandler(encryptionServices)
                     }),
                     uuid
                 ),
@@ -43,7 +45,7 @@ export class QRGoPassSession {
         );
     }
 
-    public async getCredentials(): Promise<UserCredentials | QRGoPassFailure> {
+    public async getCredentials(): ReturnType<IResponseHandler["handleResponse"]> {
         const remoteResponse = await this.remote.getResponse();
         return this.responseHandler.handleResponse(remoteResponse);
     }

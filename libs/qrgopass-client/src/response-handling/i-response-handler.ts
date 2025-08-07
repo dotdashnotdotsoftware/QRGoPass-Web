@@ -1,5 +1,5 @@
-import { QRGoPassFailure, UserCredentials } from "../types";
+import { BackupKey, QRGoPassFailure, UserCredentials } from "../types";
 
 export interface IResponseHandler {
-    handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure>;
+    handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure | BackupKey>;
 }
