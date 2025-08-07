@@ -10,7 +10,6 @@ export class UserCredentialsHandler implements IResponseHandler {
     public async handleResponse(response: any): Promise<UserCredentials | QRGoPassFailure> {
 
         if (CREDENTIAL_TRANSFER !== Number(response.V)) {
-            console.log("Unsuppored right now");
             return { failureReason: FailureReason.UNSUPPORTED_VERSION };
         }
 
