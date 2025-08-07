@@ -71,6 +71,8 @@ async function main() {
     const failure = result as QRGoPassFailure;
     if (failure.failureReason === FailureReason.TRANSFER_TIMEOUT) {
       document.getElementById('sessionId')!.innerHTML = "TIMED OUT";
+    } else if (failure.failureReason === FailureReason.UNSUPPORTED_VERSION) {
+      document.getElementById('sessionId')!.innerHTML = "UNSUPPORTED VERSION";
     }
     console.log(result);
   } else {
