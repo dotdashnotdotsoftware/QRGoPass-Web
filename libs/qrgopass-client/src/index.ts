@@ -1,2 +1,2 @@
 export { initialise } from './comms'
-export { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } from './types'
+export type { UserCredentials, QRGoPassFailure, FailureReason, isQRGoPassFailure } from './types'
