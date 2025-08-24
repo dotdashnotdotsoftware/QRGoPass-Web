@@ -6,7 +6,17 @@ export const Header = component$(() => {
 
     return (
         <header>
-            I AM A HEADER
+            <div class="left-links">
+                <a href="index.html">
+                    <img src="/public/logo_32.png" />
+                    QRGoPass
+                </a>
+            </div>
+            <div class="right-links">
+                <a href="/about.html">What is this?</a>
+                <a href="/information.html">Information</a>
+                <a href="/faqs.html">FAQs</a>
+            </div>
         </header>
     );
 });
