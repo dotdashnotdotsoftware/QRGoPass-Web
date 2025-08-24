@@ -5,6 +5,8 @@ header {
     background-color: #3C90DD;
     padding: 1rem;
     text-align: center;
+    font-weight: 100;
+    font-family: Impact, Charcoal, sans-serif;
 }
 
 .left-links a,
