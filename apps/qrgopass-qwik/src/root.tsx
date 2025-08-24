@@ -22,6 +22,15 @@ export default component$(() => {
             href={`${import.meta.env.BASE_URL}manifest.json`}
           />
         )}
+        <style>
+          {`
+            body {
+              background-color: white;
+              margin: 0;
+              font-family: 'Arial', sans-serif;
+            }
+          `}
+        </style>
         <RouterHead />
       </head>
       <body lang="en">
