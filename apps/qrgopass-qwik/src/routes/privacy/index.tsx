@@ -2,9 +2,6 @@ import { component$, useStylesScoped$ } from '@builder.io/qwik';
 import { DocumentHead } from '@builder.io/qwik-city';
 import styles from './privacy.css?inline';
 
-const currentYear = new Date().getFullYear();
-
-
 export default component$(() => {
     useStylesScoped$(styles);
 

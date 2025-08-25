@@ -1,0 +1,20 @@
+article {
+    background-color: #3C90DD;
+    border-radius: 25px;
+    box-sizing: border-box;
+    padding: 0.5em 1em 1em 1em;
+    color: white;
+    margin: 3em;
+    font-family: Impact, Charcoal, sans-serif;
+    min-width: 300px;
+}
+
+article h1 {
+    font-size: 2em;
+    text-align: center;
+    margin: 0.5em;
+}
+
+article h2 {
+    font-size: 1.25em;
+}

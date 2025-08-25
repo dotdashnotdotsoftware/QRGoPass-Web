@@ -1,5 +1,7 @@
 import { component$, useStylesScoped$ } from '@builder.io/qwik';
 import styles from "./header.css?inline";
+import moduleStyles from "./header.module.css";
+import { Link } from '@builder.io/qwik-city';
 
 export const Header = component$(() => {
     useStylesScoped$(styles);
@@ -15,7 +17,7 @@ export const Header = component$(() => {
             </div>
             <div class="right-links">
                 <a href="/about.html">What is this?</a>
-                <a href="/information.html">Information</a>
+                <Link href="/information" class={moduleStyles["nav-link"]}>Information</Link>
                 <a href="/faqs.html">FAQs</a>
             </div>
         </header>
