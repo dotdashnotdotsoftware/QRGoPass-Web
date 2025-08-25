@@ -9,7 +9,7 @@ export const Header = component$(() => {
     return (
         <header>
             <div class="left-links">
-                <a href="index.html">
+                <a href="/index.html">
                     {/* eslint-disable-next-line qwik/jsx-img */}
                     <img src="/logo_32.png" />
                     QRGoPass
