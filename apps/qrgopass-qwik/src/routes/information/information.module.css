@@ -1,0 +1,5 @@
+.info-article a,
+.info-article a:visited,
+.info-article a:active {
+    color: white;
+}
