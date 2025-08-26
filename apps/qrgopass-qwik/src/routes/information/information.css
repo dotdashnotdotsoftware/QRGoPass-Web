@@ -17,4 +17,44 @@ article h1 {
 
 article h2 {
     font-size: 1.25em;
+    text-align: center;
+}
+
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    min-width: 300px;
+    max-width: calc((4 * 16em));
+    justify-content: center;
+    margin: 0 3em;
+}
+
+.blue-button {
+    width: 8em;
+    height: 8em;
+    background-color: #3C90DD;
+    color: white;
+    border: none;
+    border-radius: 1em;
+    font-size: 2em;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.blue-button:hover {
+    background-color: #1e40af;
+}
+
+.blue-button:active {
+    transform: scale(0.98);
+}
+
+.blue-button:focus-visible {
+    outline: 3px solid black;
+    outline-offset: 2px;
 }

@@ -1,33 +1,55 @@
-import { component$, useStylesScoped$ } from '@builder.io/qwik';
-import { DocumentHead, Link } from '@builder.io/qwik-city';
+import { component$, useSignal, useStylesScoped$ } from '@builder.io/qwik';
+import { DocumentHead } from '@builder.io/qwik-city';
 import styles from './information.css?inline';
 import stylesModule from './information.module.css';
+import { defaultContent, faqs } from './faqs';
 
 export default component$(() => {
     useStylesScoped$(styles);
 
+    const activeComponent = useSignal(defaultContent);
+
     return (
-        <article class={stylesModule["info-article"]}>
-            <h1>Information</h1>
-            <div>For any extra details, please don't hesitate to contact us on dotdashnotdotsoftware (at) gmail.com</div>
-            <ul>
-                <li>
-                    <Link href="/privacy">Privacy Policy</Link>
-                </li>
-                <li>
-                    <Link href="/terms">Terms of Use</Link>
-                </li>
-            </ul>
-        </article>
+        <>
+            <article class={stylesModule["info-article"]}>
+                <h1>Information</h1>
+                <h2>For any extra details, please don't hesitate to contact us on dotdashnotdotsoftware (at) gmail.com!</h2>
+                {
+                    Object.entries(faqs).map(
+                        ([title, FaqComponent]) => {
+                            return <FaqComponent
+                                key={title}
+                                activeComponent={activeComponent.value}
+                            />
+                        })
+                }
+            </article>
+
+            <div class="button-grid">
+                {
+                    Object.entries(faqs).map(
+                        ([title]) => (
+                            <button
+                                key={title}
+                                class="blue-button"
+                                onClick$={() => (activeComponent.value = title)}
+                            >
+                                {title}
+                            </button>
+                        )
+                    )
+                }
+            </div>
+        </>
     );
 });
 
 export const head: DocumentHead = {
-    title: "Welcome to Qwik",
+    title: "FAQs - QRGoPass",
     meta: [
         {
-            name: "description",
-            content: "Qwik site description",
+            name: "FAQs about QRGoPass",
+            content: "Answers to frequently asked questions about QRGoPass, including security, storage, and usage.",
         },
     ],
 };
