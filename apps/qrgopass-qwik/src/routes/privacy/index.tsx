@@ -25,11 +25,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-    title: "Welcome to Qwik",
+    title: "Privacy Policy - QRGoPass",
     meta: [
         {
-            name: "description",
-            content: "Qwik site description",
+            name: "Privacy Policy",
+            content: "Privacy policy for QRGoPass application and website.",
         },
     ],
 };
