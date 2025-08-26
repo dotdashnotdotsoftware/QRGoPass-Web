@@ -17,8 +17,7 @@ export const Header = component$(() => {
             </div>
             <div class="right-links">
                 <a href="/about.html">What is this?</a>
-                <Link href="/information" class={moduleStyles["nav-link"]}>Information</Link>
-                <a href="/faqs.html">FAQs</a>
+                <Link href="/information" class={moduleStyles["nav-link"]}>FAQs</Link>
             </div>
         </header>
     );
