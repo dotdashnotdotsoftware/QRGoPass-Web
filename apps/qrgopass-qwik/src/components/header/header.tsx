@@ -9,11 +9,10 @@ export const Header = component$(() => {
     return (
         <header>
             <div class="left-links">
-                <a href="/index.html">
-                    {/* eslint-disable-next-line qwik/jsx-img */}
+                <Link href="/" class={moduleStyles["nav-link"]}>{/* eslint-disable-next-line qwik/jsx-img */}
                     <img src="/logo_32.png" />
                     QRGoPass
-                </a>
+                </Link>
             </div>
             <div class="right-links">
                 <a href="/about.html">What is this?</a>
