@@ -7,6 +7,8 @@ export class AwsRemote implements IRemote {
     private readonly FETCH_TIMEOUT = 3000;
     private readonly FETCH_ATTEMPTS = 4;
 
+    public readonly timeout = this.FETCH_TIMEOUT * this.FETCH_ATTEMPTS
+
     constructor(private readonly uuid: string) { }
 
     public async getResponse(): Promise<any | QRGoPassFailure> {

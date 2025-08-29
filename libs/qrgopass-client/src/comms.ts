@@ -25,6 +25,9 @@ export async function initialise(): Promise<QRGoPassSession> {
 
 export class QRGoPassSession {
     private readonly responseHandler: IResponseHandler;
+    get timeout() {
+        return this.remote.timeout;
+    }
 
     constructor(
         encryptionServices: EncryptionServices,

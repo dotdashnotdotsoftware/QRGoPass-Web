@@ -1,17 +1,21 @@
-import { component$, Signal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, Signal, useSignal, useStylesScoped$, useVisibleTask$ } from '@builder.io/qwik';
 // @ts-expect-error - no types available for this package
 import QRCode from 'qrcode-esm';
 import { initialise, UserCredentials } from 'qrgopass-client'
 import { CredentialsRXContainer } from '../credentials-received';
+import styles from "./landing-qr.css?inline"
 
 const QRGOPASS_WEB_CRYPTO_CODE = 5;
 
 export const LandingQr = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
     const qrCodeSvg = useSignal<string>('');
+    const qrCodeTimeout = useSignal<number>(0)
+    useStylesScoped$(styles);
 
     useVisibleTask$(async () => {
         const session = await initialise();
 
+        qrCodeTimeout.value = session.timeout;
         const scanData = { V: QRGOPASS_WEB_CRYPTO_CODE, UUID: session.uuid, Data: { Key: session.base64EncodedPublicKey } };
         QRCode.toString(JSON.stringify(scanData), { type: 'svg' })
             .then((svg: string) => {
@@ -23,9 +27,9 @@ export const LandingQr = component$(({ credentials }: { credentials: Signal<Cred
 
         // Disable as needed for manual testing
         if (true) {
-            setTimeout(() => {
-                credentials.value = new CredentialsRXContainer("result.userIdentifier", "result.password")
-            }, 2000)
+            // setTimeout(() => {
+            //     credentials.value = new CredentialsRXContainer("result.userIdentifier", "result.password")
+            // }, 2000)
 
             return
         }
@@ -38,9 +42,9 @@ export const LandingQr = component$(({ credentials }: { credentials: Signal<Cred
     });
 
     return <>
-        <h2>Scan to visit QRGoPass!</h2>
+        <h2>Waiting for connection from mobile app...</h2>
         {qrCodeSvg.value ? (
-            <div dangerouslySetInnerHTML={qrCodeSvg.value} />
+            <div style={{ ["--timeout"]: `${qrCodeTimeout.value / 1000}s` }} dangerouslySetInnerHTML={qrCodeSvg.value} />
         ) : (
             <p>Generating QR code...</p>
         )}
