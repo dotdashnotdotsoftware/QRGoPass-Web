@@ -8,14 +8,9 @@ export default component$(() => {
     useStylesScoped$(styles);
     const rx_value = useSignal<CredentialsRXContainer | null>(null);
 
-    useVisibleTask$(() => {
-        rx_value.value = new CredentialsRXContainer('user', 'password');
-    });
-
     return (
         <div>
-            <h2>Scan to visit QRGoPass!</h2>
-            {rx_value.value === null ? <LandingQr /> : <></>}
+            {rx_value.value === null ? <LandingQr credentials={rx_value} /> : <></>}
             {rx_value.value !== null ? <CredentialsReceived credentials={rx_value} /> : <></>}
         </div>
     );

@@ -1,11 +1,12 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, Signal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 // @ts-expect-error - no types available for this package
 import QRCode from 'qrcode-esm';
-import { initialise } from 'qrgopass-client'
+import { initialise, UserCredentials } from 'qrgopass-client'
+import { CredentialsRXContainer } from '../credentials-received';
 
 const QRGOPASS_WEB_CRYPTO_CODE = 5;
 
-export const LandingQr = component$(() => {
+export const LandingQr = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
     const qrCodeSvg = useSignal<string>('');
 
     useVisibleTask$(async () => {
@@ -20,15 +21,22 @@ export const LandingQr = component$(() => {
                 console.error('Failed to generate QR code:', err);
             });
 
-        if (false) {
-            const result = await session.getCredentials();
-            console.log("Credentials result:", result);
+        // Disable as needed for manual testing
+        if (true) return
+
+        const result = await session.getCredentials() as UserCredentials;
+
+        if (result.userIdentifier) {
+            credentials.value = new CredentialsRXContainer(result.userIdentifier, result.password)
         }
     });
 
-    return qrCodeSvg.value ? (
-        <div dangerouslySetInnerHTML={qrCodeSvg.value} />
-    ) : (
-        <p>Generating QR code...</p>
-    )
+    return <>
+        <h2>Scan to visit QRGoPass!</h2>
+        {qrCodeSvg.value ? (
+            <div dangerouslySetInnerHTML={qrCodeSvg.value} />
+        ) : (
+            <p>Generating QR code...</p>
+        )}
+    </>
 });
