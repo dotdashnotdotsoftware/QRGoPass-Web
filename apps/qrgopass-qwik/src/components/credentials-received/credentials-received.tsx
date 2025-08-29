@@ -4,8 +4,8 @@ import { pushIntoClipboard } from '~/utils/clipboard';
 
 export class CredentialsRXContainer {
     constructor(
-        readonly user: string,
-        readonly password: string,
+        private readonly user: string,
+        private readonly password: string,
     ) { }
 
     copyUserToClipboard() {
