@@ -1,4 +1,5 @@
-import { component$, Signal } from '@builder.io/qwik';
+import { component$, Signal, useStylesScoped$ } from '@builder.io/qwik';
+import styles from './credentials-received.css?inline';
 
 export class CredentialsRXContainer {
     constructor(
@@ -8,6 +9,8 @@ export class CredentialsRXContainer {
 }
 
 export const CredentialsReceived = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
+    useStylesScoped$(styles)
+
     if (credentials.value === null) {
         return null;
     }
@@ -16,8 +19,17 @@ export const CredentialsReceived = component$(({ credentials }: { credentials: S
         <div>
             <img src="/logo_128.png" alt="QRGoPass Logo" />
             <h2>Credentials Received</h2>
-            <p>User: {credentials.value.user}</p>
-            <p>Password: {credentials.value.password}</p>
-        </div>
-    )
+            <div class="button-group">
+                <button class="copy-button" onClick$={() => { console.log("Copy button clicked") }}>
+                    Copy User
+                </button>
+                <button class="copy-button" onClick$={() => { console.log("Copy button clicked") }}>
+                    Copy Password
+                </button>
+                <button class="copy-button" onClick$={() => { console.log("Copy button clicked") }}>
+                    Clear Clipboard
+                </button>
+            </div>
+        </div >
+    );
 });
