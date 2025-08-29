@@ -1,4 +1,4 @@
-import { component$, useSignal, useStylesScoped$ } from '@builder.io/qwik';
+import { component$, useSignal, useStylesScoped$, useVisibleTask$ } from '@builder.io/qwik';
 import { DocumentHead } from '@builder.io/qwik-city';
 import styles from './landing.css?inline';
 import { LandingQr } from '~/components/landing-qr';
@@ -6,7 +6,11 @@ import { CredentialsReceived, CredentialsRXContainer } from '~/components/creden
 
 export default component$(() => {
     useStylesScoped$(styles);
-    const rx_value = useSignal<CredentialsRXContainer | null>(new CredentialsRXContainer("user", "password"));
+    const rx_value = useSignal<CredentialsRXContainer | null>(null);
+
+    useVisibleTask$(() => {
+        rx_value.value = new CredentialsRXContainer('user', 'password');
+    });
 
     return (
         <div>
