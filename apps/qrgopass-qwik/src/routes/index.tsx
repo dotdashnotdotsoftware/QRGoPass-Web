@@ -7,7 +7,7 @@ export default component$(() => {
     useStylesScoped$(styles);
 
     return (
-        <div style={{ width: "50%" }}>
+        <div>
             <h2>Scan to visit QRGoPass!</h2>
             <LandingQr />
         </div>

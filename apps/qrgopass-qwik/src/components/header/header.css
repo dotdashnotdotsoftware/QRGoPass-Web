@@ -33,4 +33,13 @@ header a:hover {
 
 .right-links {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.right-links img {
+    height: 2em;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 0.1em
 }
