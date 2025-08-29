@@ -29,8 +29,8 @@ export const CredentialsReceived = component$(({ credentials }: { credentials: S
     }
 
     return (
-        <div>
-            <img src="/logo_128.png" alt="QRGoPass Logo" />
+        <>
+            <img src="/logo_128.png" alt="QRGoPass Logo" height={128} width={128} />
             <h2>Credentials Received</h2>
             <div class="button-group">
                 <button class="copy-button" onClick$={() => {
@@ -49,6 +49,6 @@ export const CredentialsReceived = component$(({ credentials }: { credentials: S
                     Clear Clipboard
                 </button>
             </div>
-        </div >
+        </>
     );
 });
