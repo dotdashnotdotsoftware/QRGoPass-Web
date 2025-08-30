@@ -1,27 +1,40 @@
 import { $, component$, Signal, useSignal, useTask$ } from "@builder.io/qwik";
 import { TransferStage } from "./transfer-stage";
 import { CredentialsRXContainer } from "../credentials-received";
-import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials } from "qrgopass-client";
+import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials, isQRGoPassFailure, FailureReason } from "qrgopass-client";
 import { TimedOut } from "./timed-out";
+import { UnexpectedError } from "./unexpected-error";
 
 export const LandingQr = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
-    const transferState = useSignal<UserCredentials | QRGoPassFailure | BackupKey | null>(null)
+    const transferStateSignal = useSignal<UserCredentials | QRGoPassFailure | BackupKey | null>(null)
 
     useTask$(({ track }) => {
-        track(() => transferState.value);
-        const value = transferState.value
+        track(() => transferStateSignal.value);
+        const value = transferStateSignal.value
         if (isUserCredentials(value)) {
             credentials.value = new CredentialsRXContainer(value.userIdentifier, value.password)
         }
     });
 
     const handleRetry = $(() => {
-        transferState.value = null
+        transferStateSignal.value = null
     });
 
-    if (transferState.value === null) {
-        return <TransferStage transferState={transferState} />
+    if (transferStateSignal.value === null) {
+        return <TransferStage transferState={transferStateSignal} />
     }
 
-    return <TimedOut onRetry$={handleRetry} />
+    const { value: transferState } = transferStateSignal
+    if (isQRGoPassFailure(transferState)) {
+        if (transferState.failureReason === FailureReason.TRANSFER_TIMEOUT) {
+            return <TimedOut onRetry$={handleRetry} />
+        }
+
+        if ([FailureReason.DECRYPTION_FAILURE, FailureReason.UNKNOWN_ERROR, FailureReason.UNSUPPORTED_VERSION].includes(transferState.failureReason)) {
+            return <UnexpectedError onRetry$={handleRetry} />
+        }
+    }
+
+    console.error("Unexpected UI state...")
+    return <UnexpectedError onRetry$={handleRetry} />
 })
