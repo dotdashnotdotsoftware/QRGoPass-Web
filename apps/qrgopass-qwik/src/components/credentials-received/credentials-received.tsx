@@ -1,6 +1,7 @@
 import { component$, Signal, useStylesScoped$ } from '@builder.io/qwik';
 import styles from './credentials-received.css?inline';
 import { pushIntoClipboard } from '~/utils/clipboard';
+import { AppButton } from '../app-button';
 
 export class CredentialsRXContainer {
     constructor(
@@ -33,21 +34,21 @@ export const CredentialsReceived = component$(({ credentials }: { credentials: S
             <img src="/logo_128.png" alt="QRGoPass Logo" height={128} width={128} />
             <h2>Credentials Received</h2>
             <div class="button-group">
-                <button class="copy-button" onClick$={() => {
+                <AppButton onClick$={() => {
                     credentials.value?.copyUserToClipboard();
                 }}>
                     Copy User
-                </button>
-                <button class="copy-button" onClick$={() => {
+                </AppButton>
+                <AppButton onClick$={() => {
                     credentials.value?.copyPasswordToClipboard();
                 }}>
                     Copy Password
-                </button>
-                <button class="copy-button" onClick$={() => {
+                </AppButton>
+                <AppButton onClick$={() => {
                     credentials.value?.clearClipboard();
                 }}>
                     Clear Clipboard
-                </button>
+                </AppButton>
             </div>
         </>
     );
