@@ -20,6 +20,10 @@ export type QRGoPassFailure = {
     failureReason: FailureReason;
 }
 
+export function isUserCredentials(obj: any): obj is UserCredentials {
+    return obj && typeof obj.userIdentifier === 'string' && typeof obj.password === 'string';
+}
+
 export function isQRGoPassFailure(obj: any): obj is QRGoPassFailure {
     return obj && typeof obj.failureReason === 'number';
 }

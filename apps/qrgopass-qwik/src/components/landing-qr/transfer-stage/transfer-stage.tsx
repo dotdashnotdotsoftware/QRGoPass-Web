@@ -1,13 +1,13 @@
 import { component$, Signal, useSignal, useStylesScoped$, useVisibleTask$ } from '@builder.io/qwik';
 // @ts-expect-error - no types available for this package
 import QRCode from 'qrcode-esm';
-import { initialise, UserCredentials } from 'qrgopass-client'
-import { CredentialsRXContainer } from '../../credentials-received';
+import { initialise, QRGoPassFailure, UserCredentials } from 'qrgopass-client'
 import styles from "./transfer-stage.css?inline"
+import { BackupKey } from 'qrgopass-client/dist/types';
 
 const QRGOPASS_WEB_CRYPTO_CODE = 5;
 
-export const TransferStage = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
+export const TransferStage = component$(({ transferState }: { transferState: Signal<UserCredentials | QRGoPassFailure | BackupKey | null> }) => {
     const qrCodeSvg = useSignal<string>('');
     const qrCodeTimeout = useSignal<number>(0)
     useStylesScoped$(styles);
@@ -26,20 +26,18 @@ export const TransferStage = component$(({ credentials }: { credentials: Signal<
             });
 
         // Disable as needed for manual testing
-        if (false) {
-            // setTimeout(() => {
-            //     credentials.value = new CredentialsRXContainer("result.userIdentifier", "result.password")
-            // }, 2000)
+        if (true) {
+            setTimeout(() => {
+                transferState.value = {
+                    userIdentifier: "username",
+                    password: "pass"
+                } satisfies UserCredentials
+            }, 2000)
 
             return
         }
 
-        const result = await session.getCredentials() as UserCredentials;
-
-        console.log("result", result)
-        if (result.userIdentifier) {
-            credentials.value = new CredentialsRXContainer(result.userIdentifier, result.password)
-        }
+        transferState.value = await session.getCredentials();
     });
 
     return <>
