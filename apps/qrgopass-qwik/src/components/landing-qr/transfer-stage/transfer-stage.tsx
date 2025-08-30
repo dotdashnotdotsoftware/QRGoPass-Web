@@ -26,7 +26,7 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
             });
 
         // Disable as needed for manual testing
-        if (true) {
+        if (false) {
             setTimeout(() => {
                 transferState.value = {
                     userIdentifier: "username",
