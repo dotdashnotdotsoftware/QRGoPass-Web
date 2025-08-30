@@ -26,7 +26,7 @@ export const LandingQr = component$(({ credentials }: { credentials: Signal<Cred
             });
 
         // Disable as needed for manual testing
-        if (true) {
+        if (false) {
             // setTimeout(() => {
             //     credentials.value = new CredentialsRXContainer("result.userIdentifier", "result.password")
             // }, 2000)
@@ -36,6 +36,7 @@ export const LandingQr = component$(({ credentials }: { credentials: Signal<Cred
 
         const result = await session.getCredentials() as UserCredentials;
 
+        console.log("result", result)
         if (result.userIdentifier) {
             credentials.value = new CredentialsRXContainer(result.userIdentifier, result.password)
         }
