@@ -28,7 +28,7 @@ export const Header = component$(() => {
                 </HomeLink>
             </div>
             <div class="right-links">
-                <a href="/about.html">What is this?</a>
+                <Link href="/about" class={moduleStyles["nav-link"]}>What is this?</Link>
                 <Link href="/information" class={moduleStyles["nav-link"]}>FAQs</Link>
                 <a href="https://play.google.com/store/apps/details?id=com.qrgopass.qrgopass.live&hl=en-GB">
                     <img src="/GetItOnGooglePlay_Badge_Web_color_English.png" width={108} height={32} />
