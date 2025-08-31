@@ -12,7 +12,7 @@ export default component$(() => {
             <Header />
 
             <main class="main-content">
-                <Slot /> {/* <== This is where the route will be inserted */}
+                <Slot />
             </main>
             {/* <Footer /> */}
         </div>

@@ -1,7 +1,20 @@
-import { component$, useStylesScoped$ } from '@builder.io/qwik';
+import { $, component$, Slot, useStylesScoped$ } from '@builder.io/qwik';
 import styles from "./header.css?inline";
 import moduleStyles from "./header.module.css";
-import { Link } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
+
+const HomeLink = component$(() => {
+    const location = useLocation();
+    const isHome = location.url.pathname === '/';
+
+    return isHome ?
+        <a href={"/"} class={moduleStyles["nav-link"]}>
+            <Slot />
+        </a> :
+        <Link href={"/"} class={moduleStyles["nav-link"]}>
+            <Slot />
+        </Link>
+})
 
 export const Header = component$(() => {
     useStylesScoped$(styles);
@@ -9,10 +22,10 @@ export const Header = component$(() => {
     return (
         <header>
             <div class="left-links">
-                <Link href="/" class={moduleStyles["nav-link"]}>{/* eslint-disable-next-line qwik/jsx-img */}
-                    <img src="/logo_32.png" />
+                <HomeLink>{/* eslint-disable-next-line qwik/jsx-img */}
+                    <img src="/logo_32.png" width={32} height={32} />
                     QRGoPass
-                </Link>
+                </HomeLink>
             </div>
             <div class="right-links">
                 <a href="/about.html">What is this?</a>
