@@ -33,7 +33,7 @@ export const BackupKeyReceived = component$(({ backupKey }: { backupKey: Signal<
 
             const link = document.createElement('a');
             link.href = dataUrl;
-            link.download = 'qrcode.png';
+            link.download = 'QRGoPass_Backup_Key.png';
 
             // Simulate a click without appending to the DOM
             link.dispatchEvent(new MouseEvent('click', {
