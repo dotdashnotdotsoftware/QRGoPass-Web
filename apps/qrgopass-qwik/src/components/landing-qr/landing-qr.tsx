@@ -4,6 +4,7 @@ import { CredentialsRXContainer } from "../credentials-received";
 import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials, isQRGoPassFailure, FailureReason } from "qrgopass-client";
 import { TimedOut } from "./timed-out";
 import { UnexpectedError } from "./unexpected-error";
+import { SuspiciousActivityError } from "./suspicious-activity";
 
 export const LandingQr = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
     const transferStateSignal = useSignal<UserCredentials | QRGoPassFailure | BackupKey | null>(null)
@@ -28,6 +29,10 @@ export const LandingQr = component$(({ credentials }: { credentials: Signal<Cred
     if (isQRGoPassFailure(transferState)) {
         if (transferState.failureReason === FailureReason.TRANSFER_TIMEOUT) {
             return <TimedOut onRetry$={handleRetry} />
+        }
+
+        if (FailureReason.SUSPICIOUS_ACTIVITY === transferState.failureReason) {
+            return <SuspiciousActivityError onRetry$={handleRetry} />
         }
 
         if ([FailureReason.DECRYPTION_FAILURE, FailureReason.UNKNOWN_ERROR, FailureReason.UNSUPPORTED_VERSION].includes(transferState.failureReason)) {

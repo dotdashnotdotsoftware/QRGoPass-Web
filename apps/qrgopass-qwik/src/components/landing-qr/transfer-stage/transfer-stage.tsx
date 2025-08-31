@@ -3,7 +3,7 @@ import { component$, Signal, useSignal, useStylesScoped$, useVisibleTask$ } from
 import QRCode from 'qrcode-esm';
 import { initialise, QRGoPassFailure, UserCredentials } from 'qrgopass-client'
 import styles from "./transfer-stage.css?inline"
-import { BackupKey } from 'qrgopass-client/dist/types';
+import { BackupKey, FailureReason } from 'qrgopass-client/dist/types';
 
 const QRGOPASS_WEB_CRYPTO_CODE = 5;
 
@@ -27,11 +27,15 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
 
         // Disable as needed for manual testing
         if (false) {
+
             setTimeout(() => {
-                transferState.value = {
-                    userIdentifier: "username",
-                    password: "pass"
-                } satisfies UserCredentials
+                // transferState.value = {
+                //     userIdentifier: "username",
+                //     password: "pass"
+                // } satisfies UserCredentials
+                // transferState.value = {
+                //     failureReason: FailureReason.SUSPICIOUS_ACTIVITY
+                // }
             }, 2000)
 
             return
