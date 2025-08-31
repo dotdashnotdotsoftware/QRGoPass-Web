@@ -9,7 +9,6 @@ import { ExceptionHandler } from "./response-handling/exception-handler";
 import { VersionHandler } from "./response-handling/version-handler";
 import { ParanoiaHandler } from "./response-handling/paranoia-handler/paranoia-handler";
 import { BACKUP_KEY_TRANSFER, BackupKeyHandler } from "./response-handling/backup-key-transfer";
-import { NullRemote } from "./remotes/null-remote";
 
 export async function initialise(): Promise<QRGoPassSession> {
     const encryptionServices = await EncryptionServices.createAsync();
@@ -20,8 +19,7 @@ export async function initialise(): Promise<QRGoPassSession> {
         encryptionServices,
         uuid,
         base64EncodedPublicKey,
-        //new AwsRemote(uuid)
-        new NullRemote()
+        new AwsRemote(uuid)
     );
 }
 
