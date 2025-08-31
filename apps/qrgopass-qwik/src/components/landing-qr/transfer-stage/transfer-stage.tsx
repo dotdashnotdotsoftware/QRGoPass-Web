@@ -54,7 +54,7 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
         {qrCodeSvg.value ? (
             <div style={{ ["--timeout"]: `${qrCodeTimeout.value / 1000}s` }} dangerouslySetInnerHTML={qrCodeSvg.value} />
         ) : (
-            <p>Generating QR code...</p>
+            <div class="generator">Generating QR code...</div>
         )}
     </>
 });

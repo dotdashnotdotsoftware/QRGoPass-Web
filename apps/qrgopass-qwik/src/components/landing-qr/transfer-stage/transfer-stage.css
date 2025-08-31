@@ -24,3 +24,7 @@ div {
     background: conic-gradient(black calc(var(--angle) * 1deg), transparent 0deg);
     animation: animate-angle var(--timeout) linear forwards;
 }
+
+div.generator {
+    aspect-ratio: 1 / 1;
+}
