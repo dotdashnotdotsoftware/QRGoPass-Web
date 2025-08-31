@@ -22,12 +22,8 @@ export class CredentialsRXContainer {
     }
 }
 
-export const CredentialsReceived = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
+export const CredentialsReceived = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer> }) => {
     useStylesScoped$(styles)
-
-    if (credentials.value === null) {
-        return null;
-    }
 
     return (
         <>

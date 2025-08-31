@@ -24,6 +24,10 @@ export function isUserCredentials(obj: any): obj is UserCredentials {
     return obj && typeof obj.userIdentifier === 'string' && typeof obj.password === 'string';
 }
 
+export function isBackupKey(obj: any): obj is BackupKey {
+    return obj && typeof obj.keyInfo === 'string';
+}
+
 export function isQRGoPassFailure(obj: any): obj is QRGoPassFailure {
     return obj && typeof obj.failureReason === 'number';
 }

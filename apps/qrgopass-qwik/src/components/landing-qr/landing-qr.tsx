@@ -1,19 +1,24 @@
 import { $, component$, Signal, useSignal, useTask$ } from "@builder.io/qwik";
 import { TransferStage } from "./transfer-stage";
 import { CredentialsRXContainer } from "../credentials-received";
-import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials, isQRGoPassFailure, FailureReason } from "qrgopass-client";
+import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials, isQRGoPassFailure, FailureReason, isBackupKey } from "qrgopass-client";
 import { TimedOut } from "./timed-out";
 import { UnexpectedError } from "./unexpected-error";
 import { SuspiciousActivityError } from "./suspicious-activity";
+import { BackupKeyContainer } from "../backup-key-received";
 
-export const LandingQr = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer | null> }) => {
+export const LandingQr = component$(({ rx_signal }: { rx_signal: Signal<CredentialsRXContainer | BackupKeyContainer | null> }) => {
     const transferStateSignal = useSignal<UserCredentials | QRGoPassFailure | BackupKey | null>(null)
 
     useTask$(({ track }) => {
         track(() => transferStateSignal.value);
         const value = transferStateSignal.value
         if (isUserCredentials(value)) {
-            credentials.value = new CredentialsRXContainer(value.userIdentifier, value.password)
+            rx_signal.value = new CredentialsRXContainer(value.userIdentifier, value.password)
+        }
+
+        if (isBackupKey(value)) {
+            rx_signal.value = new BackupKeyContainer(value)
         }
     });
 

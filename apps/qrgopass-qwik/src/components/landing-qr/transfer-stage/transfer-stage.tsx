@@ -33,8 +33,13 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
                 //     userIdentifier: "username",
                 //     password: "pass"
                 // } satisfies UserCredentials
+
                 // transferState.value = {
                 //     failureReason: FailureReason.SUSPICIOUS_ACTIVITY
+                // }
+
+                // transferState.value = {
+                //     keyInfo: "Demo Key"
                 // }
             }, 2000)
 
