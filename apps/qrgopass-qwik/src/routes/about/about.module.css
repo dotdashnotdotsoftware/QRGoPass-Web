@@ -1,0 +1,59 @@
+article h1 {
+    font-size: 2em;
+    text-align: center;
+    margin: 0px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 224px;
+    margin: 1em;
+}
+
+/* Common child styles */
+.infoRow>div {
+    width: 224px;
+    height: 224px;
+    background-color: #3C90DD;
+    position: absolute;
+    top: 0;
+}
+
+/* First child always centered */
+.infoRow>div.text {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.infoRow>div.icon {
+    color: #3C90DD;
+    background-color: transparent;
+    position: relative;
+    height: calc(224px - 2em);
+    width: calc(224px - 2em);
+}
+
+.infoRow:has(.text + .icon)>.icon {
+    left: calc(224px + 1em);
+}
+
+.infoRow:has(.icon + .text)>.icon {
+    right: calc(224px + 1em);
+}
+
+.icon>svg {
+    height: 100%;
+    width: 100%;
+}
