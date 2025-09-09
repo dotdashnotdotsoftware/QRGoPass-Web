@@ -2,9 +2,11 @@ import { component$ } from '@builder.io/qwik';
 import { DocumentHead } from '@builder.io/qwik-city';
 import {
     faGlobe, faLockOpen, faUser, faQuestion, faCopy,
-    faUserSecret, faClock, faKey
+    faUserSecret, faClock, faUserAstronaut, faUserShield,
+    faMobileAlt, faArrowAltCircleDown, faPlusCircle,
+    faHandPointDown, faQrcode, faCloudDownloadAlt
 } from '@fortawesome/free-solid-svg-icons';
-import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { faCircleCheck, faCloud, faPaperPlane, faPaste } from '@fortawesome/free-regular-svg-icons';
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import moduleStyles from "./about.module.css";
 
@@ -30,18 +32,30 @@ const {
     faCopySvg,
     faUserSecretSvg,
     faClockSvg,
-    faKeySvg,
-    faCircleCheckSvg
+    faUserAstronautSvg,
+    faCircleCheckSvg,
+    faUserShieldSvg,
+    faMobileAltSvg,
+    faArrowAltCircleDownSvg,
+    faPlusCircleSvg,
+    faHandPointDownSvg,
+    faCloudSvg,
+    faQrcodeSvg,
+    faPaperPlaneSvg,
+    faCloudDownloadAltSvg,
+    faPasteSvg
 } = generateSvgs({
     faGlobe, faLockOpen, faUser, faQuestion, faCopy,
-    faUserSecret, faClock, faKey, faCircleCheck
+    faUserSecret, faClock, faUserAstronaut, faCircleCheck,
+    faUserShield, faMobileAlt, faArrowAltCircleDown,
+    faPlusCircle, faHandPointDown, faCloud, faQrcode,
+    faPaperPlane, faCloudDownloadAlt, faPaste
 });
 
 export const About = component$(() => {
     return (
         <article class={moduleStyles.article}>
-            <h1>About Page</h1>
-            <h2>The Problem</h2>
+            <h1>The Problem</h1>
 
             <div class={moduleStyles.infoRow}>
                 <div class={moduleStyles.text}>
@@ -56,7 +70,7 @@ export const About = component$(() => {
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon} style="color: orange;" dangerouslySetInnerHTML={faLockOpenSvg} />
+                <div class={moduleStyles.icon} style="color: #FF2400;" dangerouslySetInnerHTML={faLockOpenSvg} />
                 <div class={moduleStyles.text}>We choose insecure passwords.</div>
             </div>
 
@@ -104,9 +118,7 @@ export const About = component$(() => {
             <h1>So how can QRGoPass help?</h1>
 
             <div class={moduleStyles.infoRow}>
-
                 <div class={moduleStyles.icon} style="color: green;" dangerouslySetInnerHTML={faCircleCheckSvg} />
-
                 <div class={moduleStyles.text}>By letting you store strong passwords.</div>
             </div>
 
@@ -114,15 +126,11 @@ export const About = component$(() => {
                 <div class={moduleStyles.text}>
                     And making everything simple to use so that you don't need to be a rocket scientist.
                 </div>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-user-astronaut"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: silver;" dangerouslySetInnerHTML={faUserAstronautSvg} />
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-user-shield"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: gold;" dangerouslySetInnerHTML={faUserShieldSvg} />
                 <div class={moduleStyles.text}>
                     You can secure your online presence with ease.
                 </div>
@@ -131,23 +139,17 @@ export const About = component$(() => {
             <h1>How do I get started?</h1>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-mobile"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: black;" dangerouslySetInnerHTML={faMobileAltSvg} />
                 <div class={moduleStyles.text}>Let's setup your mobile.</div>
             </div>
 
             <div class={moduleStyles.infoRow}>
                 <div class={moduleStyles.text}>First, download the app.</div>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-arrow-alt-circle-down"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: #006400;" dangerouslySetInnerHTML={faArrowAltCircleDownSvg} />
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-plus-circle"></i>
-                </div>
+                <div class={moduleStyles.icon} dangerouslySetInnerHTML={faPlusCircleSvg} />
                 <div class={moduleStyles.text}>
                     Second, save your logon details in the app.<br />
                     As many as you want.
@@ -162,16 +164,14 @@ export const About = component$(() => {
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.text}>Okay then, let's get you logged in.</div>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-thumbs-up"></i>
-                </div>
+                <div class={moduleStyles.text}>Okay then, let's get you logged in!</div>
+                <div class={moduleStyles.icon} dangerouslySetInnerHTML={faHandPointDownSvg} />
             </div>
 
+            <h1>Putting it all together</h1>
+
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-cloud"></i>
-                </div>
+                <div class={moduleStyles.icon} dangerouslySetInnerHTML={faCloudSvg} />
                 <div class={moduleStyles.text}>Open QRGoPass.com in your browser.</div>
             </div>
 
@@ -179,15 +179,11 @@ export const About = component$(() => {
                 <div class={moduleStyles.text}>
                     Select the account you want to log into with the app and scan the code.
                 </div>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-qrcode"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: black;" dangerouslySetInnerHTML={faQrcodeSvg} />
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-paper-plane"></i>
-                </div>
+                <div class={moduleStyles.icon} style="color: gray;" dangerouslySetInnerHTML={faPaperPlaneSvg} />
                 <div class={moduleStyles.text}>
                     The app encrypts your details and then sends them securely via HTTPS to the cloud.
                 </div>
@@ -197,15 +193,11 @@ export const About = component$(() => {
                 <div class={moduleStyles.text}>
                     Your browser downloads your details and decrypts them ready for you to use.
                 </div>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-cloud-download-alt"></i>
-                </div>
+                <div class={moduleStyles.icon} dangerouslySetInnerHTML={faCloudDownloadAltSvg} />
             </div>
 
             <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.icon}>
-                    <i class="fas fa-paste"></i>
-                </div>
+                <div class={moduleStyles.icon} dangerouslySetInnerHTML={faPasteSvg} />
                 <div class={moduleStyles.text}>
                     Finally, just copy and paste your logon details where they're needed.
                 </div>
@@ -213,12 +205,8 @@ export const About = component$(() => {
 
             <div class={moduleStyles.infoRow}>
                 <div class={moduleStyles.text}>
-                    You've just securely logged in using QRGoPass.
+                    And that's it, you've just securely logged in using QRGoPass!
                 </div>
-            </div>
-
-            <div class={moduleStyles.infoRow}>
-                <div class={moduleStyles.blank} style="height:70px;"></div>
             </div>
         </article>
     );
