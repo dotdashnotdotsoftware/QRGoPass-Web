@@ -37,14 +37,14 @@ export const LandingQr = component$(({ rx_signal }: { rx_signal: Signal<Credenti
         }
 
         if (FailureReason.SUSPICIOUS_ACTIVITY === transferState.failureReason) {
-            return <SuspiciousActivityError onRetry$={handleRetry} />
+            return <SuspiciousActivityError onRetry={handleRetry} />
         }
 
         if ([FailureReason.DECRYPTION_FAILURE, FailureReason.UNKNOWN_ERROR, FailureReason.UNSUPPORTED_VERSION].includes(transferState.failureReason)) {
-            return <UnexpectedError onRetry$={handleRetry} />
+            return <UnexpectedError onRetry={handleRetry} />
         }
     }
 
     console.error("Unexpected UI state...")
-    return <UnexpectedError onRetry$={handleRetry} />
+    return <UnexpectedError onRetry={handleRetry} />
 })

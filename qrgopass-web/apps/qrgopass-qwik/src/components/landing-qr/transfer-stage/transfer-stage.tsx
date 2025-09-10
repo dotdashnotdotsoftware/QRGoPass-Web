@@ -42,11 +42,9 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
                 //     keyInfo: "Demo Key"
                 // }
             }, 2000)
-
-            return
+        } else {
+            transferState.value = await session.getCredentials();
         }
-
-        transferState.value = await session.getCredentials();
     });
 
     return <>

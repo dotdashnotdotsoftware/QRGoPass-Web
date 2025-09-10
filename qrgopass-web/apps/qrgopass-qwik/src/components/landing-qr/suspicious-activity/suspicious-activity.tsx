@@ -1,12 +1,12 @@
-import { component$, useStylesScoped$ } from '@builder.io/qwik';
+import { component$, QRL, useStylesScoped$ } from '@builder.io/qwik';
 import styles from './suspicious-activity.css?inline';
 import { AppButton } from '~/components/app-button';
 
 interface SuspiciousActivityErrorProps {
-    onRetry$: () => void;
+    onRetry: QRL<() => void>;
 }
 
-export const SuspiciousActivityError = component$<SuspiciousActivityErrorProps>(({ onRetry$ }) => {
+export const SuspiciousActivityError = component$<SuspiciousActivityErrorProps>(({ onRetry }) => {
     useStylesScoped$(styles)
 
     return (
@@ -18,7 +18,7 @@ export const SuspiciousActivityError = component$<SuspiciousActivityErrorProps>(
                 <b>Be suspicious/aware of your surroundings.</b>
             </div>
             <div class="button-group">
-                <AppButton onClick$={onRetry$}>
+                <AppButton onClick$={onRetry}>
                     Retry
                 </AppButton>
             </div>

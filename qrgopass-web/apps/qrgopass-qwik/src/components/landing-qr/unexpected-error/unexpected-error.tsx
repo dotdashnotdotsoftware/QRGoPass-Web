@@ -1,12 +1,12 @@
-import { component$, useStylesScoped$ } from '@builder.io/qwik';
+import { component$, QRL, useStylesScoped$ } from '@builder.io/qwik';
 import styles from './unexpected-error.css?inline';
 import { AppButton } from '~/components/app-button';
 
 interface UnexpectedErrorProps {
-    onRetry$: () => void;
+    onRetry: QRL<() => void>;
 }
 
-export const UnexpectedError = component$<UnexpectedErrorProps>(({ onRetry$ }) => {
+export const UnexpectedError = component$<UnexpectedErrorProps>(({ onRetry }) => {
     useStylesScoped$(styles)
 
     return (
@@ -14,7 +14,7 @@ export const UnexpectedError = component$<UnexpectedErrorProps>(({ onRetry$ }) =
             <img src="/logo_128.png" alt="QRGoPass Logo" height={128} width={128} />
             <h2>An unexpected error occurred...</h2>
             <div class="button-group">
-                <AppButton onClick$={onRetry$}>
+                <AppButton onClick$={onRetry}>
                     Retry
                 </AppButton>
             </div>
