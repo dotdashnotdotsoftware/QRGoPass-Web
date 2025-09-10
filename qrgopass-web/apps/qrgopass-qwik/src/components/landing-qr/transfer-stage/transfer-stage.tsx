@@ -3,7 +3,7 @@ import { component$, Signal, useSignal, useStylesScoped$, useVisibleTask$ } from
 import QRCode from 'qrcode-esm';
 import { initialise, QRGoPassFailure, UserCredentials } from 'qrgopass-client'
 import styles from "./transfer-stage.css?inline"
-import { BackupKey, FailureReason } from 'qrgopass-client/dist/types';
+import { BackupKey } from 'qrgopass-client/dist/types';
 
 const QRGOPASS_WEB_CRYPTO_CODE = 5;
 
