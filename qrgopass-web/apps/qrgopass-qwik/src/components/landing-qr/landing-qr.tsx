@@ -1,4 +1,4 @@
-import { $, component$, Signal, useSignal, useTask$ } from "@builder.io/qwik";
+import { component$, Signal, useSignal, $, useTask$ } from "@builder.io/qwik";
 import { TransferStage } from "./transfer-stage";
 import { CredentialsRXContainer } from "../credentials-received";
 import { QRGoPassFailure, UserCredentials, BackupKey, isUserCredentials, isQRGoPassFailure, FailureReason, isBackupKey } from "qrgopass-client";
@@ -9,18 +9,24 @@ import { BackupKeyContainer } from "../backup-key-received";
 
 export const LandingQr = component$(({ rx_signal }: { rx_signal: Signal<CredentialsRXContainer | BackupKeyContainer | null> }) => {
     const transferStateSignal = useSignal<UserCredentials | QRGoPassFailure | BackupKey | null>(null)
+    const localSignal = useSignal<BackupKeyContainer | CredentialsRXContainer | null>(null);
 
     useTask$(({ track }) => {
         track(() => transferStateSignal.value);
-        const value = transferStateSignal.value
+        const value = transferStateSignal.value;
+
         if (isUserCredentials(value)) {
-            rx_signal.value = new CredentialsRXContainer(value.userIdentifier, value.password)
+            localSignal.value = new CredentialsRXContainer(value.userIdentifier, value.password);
         }
 
         if (isBackupKey(value)) {
-            rx_signal.value = new BackupKeyContainer(value)
+            localSignal.value = new BackupKeyContainer(value);
         }
     });
+
+    if (transferStateSignal.value) {
+        rx_signal.value = localSignal.value;
+    }
 
     const handleRetry = $(() => {
         transferStateSignal.value = null
