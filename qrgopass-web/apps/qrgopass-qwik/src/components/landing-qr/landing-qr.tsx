@@ -33,7 +33,7 @@ export const LandingQr = component$(({ rx_signal }: { rx_signal: Signal<Credenti
     const { value: transferState } = transferStateSignal
     if (isQRGoPassFailure(transferState)) {
         if (transferState.failureReason === FailureReason.TRANSFER_TIMEOUT) {
-            return <TimedOut onRetry$={handleRetry} />
+            return <TimedOut onRetry={handleRetry} />
         }
 
         if (FailureReason.SUSPICIOUS_ACTIVITY === transferState.failureReason) {
