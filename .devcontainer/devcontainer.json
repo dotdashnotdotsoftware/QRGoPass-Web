@@ -9,7 +9,7 @@
     "${localWorkspaceFolder}/.devcontainer/common/behaviours/uses-pnpm.yml"
   ],
   "remoteUser": "node",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspace/qrgopass-web",
   "service": "dev-container",
   "shutdownAction": "stopCompose",
   "customizations": {
