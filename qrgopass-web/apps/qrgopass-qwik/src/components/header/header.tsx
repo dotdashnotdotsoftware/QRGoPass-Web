@@ -1,4 +1,4 @@
-import { $, component$, Slot, useStylesScoped$ } from '@builder.io/qwik';
+import { component$, Slot, useStylesScoped$ } from '@builder.io/qwik';
 import styles from "./header.css?inline";
 import moduleStyles from "./header.module.css";
 import { Link, useLocation } from '@builder.io/qwik-city';

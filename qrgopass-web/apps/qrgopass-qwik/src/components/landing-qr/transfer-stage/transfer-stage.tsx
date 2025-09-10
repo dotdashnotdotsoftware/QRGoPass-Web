@@ -26,6 +26,7 @@ export const TransferStage = component$(({ transferState }: { transferState: Sig
             });
 
         // Disable as needed for manual testing
+        // eslint-disable-next-line no-constant-condition
         if (false) {
 
             setTimeout(() => {
