@@ -14,19 +14,6 @@ importers:
 
   .: {}
 
-  apps/qrgopass-package-demo:
-    dependencies:
-      qrgopass-client:
-        specifier: workspace:*
-        version: link:../../libs/qrgopass-client
-    devDependencies:
-      typescript:
-        specifier: ^5.0.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.3.2
-        version: 4.5.14(@types/node@24.2.0)(less@4.4.1)(sass@1.90.0)(stylus@0.62.0)
-
   apps/qrgopass-qwik:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
