@@ -1,4 +1,4 @@
-import { component$, Signal, useSignal, useStylesScoped$ } from '@builder.io/qwik';
+import { component$, noSerialize, Signal, useSignal, useStylesScoped$ } from '@builder.io/qwik';
 import { DocumentHead } from '@builder.io/qwik-city';
 import styles from './landing.css?inline';
 import { LandingQr } from '~/components/landing-qr';
@@ -12,7 +12,9 @@ const ActiveUI = component$(({ rx_value }: { rx_value: Signal<CredentialsRXConta
     }
 
     if ((rx_value as Signal<CredentialsRXContainer>).value.copyUserToClipboard !== undefined) {
-        return <CredentialsReceived credentials={rx_value as Signal<CredentialsRXContainer>} />
+        const instance = noSerialize(rx_value.value as CredentialsRXContainer);
+
+        return <CredentialsReceived credentials={instance} />
     }
 
     if ((rx_value as Signal<BackupKeyContainer>).value.asQRContents !== undefined) {

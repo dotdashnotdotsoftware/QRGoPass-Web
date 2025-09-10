@@ -1,4 +1,4 @@
-import { component$, Signal, useStylesScoped$ } from '@builder.io/qwik';
+import { $, component$, NoSerialize, useStylesScoped$ } from '@builder.io/qwik';
 import styles from './credentials-received.css?inline';
 import { pushIntoClipboard } from '~/utils/clipboard';
 import { AppButton } from '../app-button';
@@ -22,27 +22,29 @@ export class CredentialsRXContainer {
     }
 }
 
-export const CredentialsReceived = component$(({ credentials }: { credentials: Signal<CredentialsRXContainer> }) => {
+interface Props {
+  credentials: NoSerialize<CredentialsRXContainer>;
+}
+
+export const CredentialsReceived = component$(({ credentials }: Props) => {
     useStylesScoped$(styles)
+
+    const copyUser = $(() => credentials?.copyUserToClipboard());
+    const copyPassword = $(() => credentials?.copyPasswordToClipboard());
+    const clear = $(() => credentials?.clearClipboard());
 
     return (
         <>
             <img src="/logo_128.png" alt="QRGoPass Logo" height={128} width={128} />
             <h2>Credentials Received</h2>
             <div class="button-group">
-                <AppButton onClick$={() => {
-                    credentials.value?.copyUserToClipboard();
-                }}>
+                <AppButton onClick$={copyUser}>
                     Copy User
                 </AppButton>
-                <AppButton onClick$={() => {
-                    credentials.value?.copyPasswordToClipboard();
-                }}>
+                <AppButton onClick$={copyPassword}>
                     Copy Password
                 </AppButton>
-                <AppButton onClick$={() => {
-                    credentials.value?.clearClipboard();
-                }}>
+                <AppButton onClick$={clear}>
                     Clear Clipboard
                 </AppButton>
             </div>
