@@ -1,4 +1,4 @@
-import { $, component$, Signal, useStylesScoped$ } from '@builder.io/qwik';
+import { $, component$, NoSerialize, useStylesScoped$ } from '@builder.io/qwik';
 import styles from './backup-key-received.css?inline';
 import { AppButton } from '../app-button';
 import { BackupKey } from 'qrgopass-client';
@@ -20,12 +20,20 @@ export class BackupKeyContainer {
     }
 }
 
-export const BackupKeyReceived = component$(({ backupKey }: { backupKey: Signal<BackupKeyContainer> }) => {
+interface Props {
+  backupKey: NoSerialize<BackupKeyContainer>;
+}
+
+export const BackupKeyReceived = component$(({ backupKey }: Props) => {
     useStylesScoped$(styles)
+
+    if(!backupKey) {
+        return null;
+    }
 
     const generateAndDownload = $(async () => {
         try {
-            const qrText = backupKey.value.asQRContents()
+            const qrText = backupKey.asQRContents()
             const dataUrl = await QRCode.toDataURL(qrText, {
                 width: 300,
                 margin: 2,

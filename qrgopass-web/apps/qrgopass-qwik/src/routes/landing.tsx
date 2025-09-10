@@ -13,12 +13,12 @@ const ActiveUI = component$(({ rx_value }: { rx_value: Signal<CredentialsRXConta
 
     if ((rx_value as Signal<CredentialsRXContainer>).value.copyUserToClipboard !== undefined) {
         const instance = noSerialize(rx_value.value as CredentialsRXContainer);
-
         return <CredentialsReceived credentials={instance} />
     }
 
     if ((rx_value as Signal<BackupKeyContainer>).value.asQRContents !== undefined) {
-        return <BackupKeyReceived backupKey={rx_value as Signal<BackupKeyContainer>} />
+        const instance = noSerialize(rx_value.value as BackupKeyContainer);
+        return <BackupKeyReceived backupKey={instance} />
     }
 
     return null
