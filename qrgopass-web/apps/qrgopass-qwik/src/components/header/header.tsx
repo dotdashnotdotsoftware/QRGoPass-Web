@@ -2,6 +2,7 @@ import { component$, Slot, useStylesScoped$ } from '@builder.io/qwik';
 import styles from "./header.css?inline";
 import moduleStyles from "./header.module.css";
 import { Link, useLocation } from '@builder.io/qwik-city';
+import { GitHubIcon } from './github';
 
 const HomeLink = component$(() => {
     const location = useLocation();
@@ -33,6 +34,7 @@ export const Header = component$(() => {
                 <a href="https://play.google.com/store/apps/details?id=com.qrgopass.qrgopass.live&hl=en-GB">
                     <img src="/GetItOnGooglePlay_Badge_Web_color_English.png" width={108} height={32} />
                 </a>
+                <GitHubIcon/>
             </div>
         </header>
     );
