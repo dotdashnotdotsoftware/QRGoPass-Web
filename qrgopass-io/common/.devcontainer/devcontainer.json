@@ -1,0 +1,28 @@
+{
+  "name": "QRGoPass - Common IO",
+  "dockerComposeFile": [
+    // Always first to ensure docker starts from a consistent location
+    "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
+    // The actual devcontainer
+    "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
+    "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",
+    // Common Network
+    "${localWorkspaceFolder}/docker/networking/docker-compose.yml",
+    // Localstack
+    "${localWorkspaceFolder}/docker/localstack/docker-compose.yml"
+  ],
+
+  "remoteUser": "node",
+  "workspaceFolder": "/workspace/common",
+  "service": "dev-container",
+  "shutdownAction": "stopCompose",
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["4ops.terraform"],
+      "settings": {
+        "files.enableSymlinks": true
+      }
+    }
+  }
+}

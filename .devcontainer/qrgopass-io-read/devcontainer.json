@@ -1,0 +1,27 @@
+{
+  "name": "QRGoPass - Read Lambda",
+  "dockerComposeFile": [
+    // Always first to ensure docker starts from a consistent location
+    "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
+    // The actual devcontainer
+    "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
+    "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",
+    // Localstack access
+    "${localWorkspaceFolder}/qrgopass-io/common/docker/networking/docker-compose.yml"
+  ],
+  "remoteUser": "node",
+  "workspaceFolder": "/workspace/qrgopass-io/read",
+  "service": "dev-container",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "4ops.terraform",
+        "firsttris.vscode-jest-runner"
+      ],
+      "settings": {
+        "files.enableSymlinks": true
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "qrgopass-read-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ./local_run.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotdashnotdotsoftware/QRGoPass-IO.git"
+  },
+  "author": "dot-notdot",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/dotdashnotdotsoftware/QRGoPass-IO/issues"
+  },
+  "homepage": "https://github.com/dotdashnotdotsoftware/QRGoPass-IO#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.328.0",
+    "@aws-sdk/util-dynamodb": "^3.328.0",
+    "jest": "^29.5.0"
+  }
+}
