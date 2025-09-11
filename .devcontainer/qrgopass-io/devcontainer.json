@@ -1,0 +1,25 @@
+{
+  "name": "QRGoPass IO",
+  "dockerComposeFile": [
+    // Always first to ensure docker starts from a consistent location
+    "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
+    // The actual devcontainer
+    "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
+    "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",
+    "${localWorkspaceFolder}/.devcontainer/common/behaviours/uses-pnpm.yml"
+  ],
+  "remoteUser": "node",
+  "workspaceFolder": "/workspace/qrgopass-io",
+  "service": "dev-container",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vitest.explorer"
+      ],
+      "settings": {
+        "files.enableSymlinks": true
+      }
+    }
+  }
+}
