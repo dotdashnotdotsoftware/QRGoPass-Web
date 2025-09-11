@@ -7,19 +7,19 @@
     "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
     "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",
     // Common Network
-    "${localWorkspaceFolder}/docker/networking/docker-compose.yml",
+    "${localWorkspaceFolder}/qrgopass-io/common/docker/networking/docker-compose.yml",
     // Localstack
-    "${localWorkspaceFolder}/docker/localstack/docker-compose.yml"
+    "${localWorkspaceFolder}/qrgopass-io/common/docker/localstack/docker-compose.yml"
   ],
-
   "remoteUser": "node",
-  "workspaceFolder": "/workspace/common",
+  "workspaceFolder": "/workspace/qrgopass-io/common",
   "service": "dev-container",
   "shutdownAction": "stopCompose",
-
   "customizations": {
     "vscode": {
-      "extensions": ["4ops.terraform"],
+      "extensions": [
+        "4ops.terraform"
+      ],
       "settings": {
         "files.enableSymlinks": true
       }
