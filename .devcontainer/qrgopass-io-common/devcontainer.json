@@ -2,7 +2,7 @@
   "name": "QRGoPass - Common IO",
   "dockerComposeFile": [
     // Always first to ensure docker starts from a consistent location
-    "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
+    "${localWorkspaceFolder}/.devcontainer/qrgopass-io-common/docker-compose.yml",
     // The actual devcontainer
     "${localWorkspaceFolder}/.devcontainer/common/nodejs/docker-compose.yml",
     "${localWorkspaceFolder}/.devcontainer/common/behaviours/filesystem.yml",

@@ -1,8 +1,0 @@
-version: "3.9"
-
-services:
-  dev-container:
-    volumes:
-      # Mount local repo as delegated for performance gains
-      - ../:/workspace:delegated
-      - ../.git/:/workspace/.git:delegated

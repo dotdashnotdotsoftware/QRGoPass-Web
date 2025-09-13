@@ -6,6 +6,8 @@ services:
       AWS_DEFAULT_REGION: us-east-2
       AWS_ACCESS_KEY_ID: KEY_FOR_LOCALSTACK
       AWS_SECRET_ACCESS_KEY: SECRET_KEY_FOR_LOCALSTACK
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-qrgopass-io-TESTED}
+      ADAM_COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-qrgopass-io-TESTED}
     volumes:
       # Mount local repo as delegated for performance gains
       # But only allow write access to git and the write project

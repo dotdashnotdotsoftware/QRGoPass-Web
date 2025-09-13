@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  dev-container:
+    volumes:
+      # Mount local repo as delegated for performance gains
+      - ../../:/workspace:ro
+      - ../../.git/:/workspace/.git:delegated
+      - ../../qrgopass-web/:/workspace/qrgopass-web:delegated

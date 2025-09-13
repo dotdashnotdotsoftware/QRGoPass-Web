@@ -9,9 +9,9 @@ services:
     volumes:
       # Mount local repo as delegated for performance gains
       # But only allow write access to git and the write project
-      - ../:/workspace:ro
-      - ../.git/:/workspace/.git:delegated
-      - ../write/:/workspace/write:delegated
+      - ../../:/workspace:ro
+      - ../../.git/:/workspace/.git:delegated
+      - ../../qrgopass-io/write/:/workspace/qrgopass-io/write:delegated
       # Permit docker access
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
