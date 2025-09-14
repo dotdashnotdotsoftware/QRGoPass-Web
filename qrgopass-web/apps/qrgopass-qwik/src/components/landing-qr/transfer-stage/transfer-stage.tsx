@@ -5,8 +5,6 @@ import { TransferActive } from './transfer-active';
 import { AppButton } from '~/components/app-button';
 import styles from './transfer-stage.css?inline';
 
-
-
 export const TransferStage = component$(({ transferState }: { transferState: Signal<UserCredentials | QRGoPassFailure | BackupKey | null> }) => {
     useStylesScoped$(styles);
 
