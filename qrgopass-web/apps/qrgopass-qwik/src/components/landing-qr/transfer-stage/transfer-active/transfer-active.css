@@ -18,11 +18,30 @@ h2 {
     }
 }
 
+
+@property --opacity {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1;
+}
+
+@keyframes pulse-opacity {
+  0%, 100% {
+    --opacity: 1;
+  }
+  50% {
+    --opacity: 0.5;
+  }
+}
+
 div {
     --angle: 0deg;
     padding: 10px;
-    background: conic-gradient(black calc(var(--angle) * 1deg), transparent 0deg);
-    animation: animate-angle var(--timeout) linear forwards;
+    background: conic-gradient(rgba(0,0,0,var(--opacity)) calc(var(--angle) * 1deg), transparent 0deg);
+    animation: animate-angle var(--timeout) linear forwards,
+               pulse-opacity 1s infinite;
+    animation-delay: 0s, var(--timeout);
+    animation-fill-mode: forwards, none;
 }
 
 div.generator {
