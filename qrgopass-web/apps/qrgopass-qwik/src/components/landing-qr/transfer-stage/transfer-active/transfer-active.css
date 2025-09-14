@@ -1,0 +1,30 @@
+h2 {
+    text-align: center;
+}
+
+@property --angle {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+@keyframes animate-angle {
+    0% {
+        --angle: 0;
+    }
+
+    100% {
+        --angle: 360;
+    }
+}
+
+div {
+    --angle: 0deg;
+    padding: 10px;
+    background: conic-gradient(black calc(var(--angle) * 1deg), transparent 0deg);
+    animation: animate-angle var(--timeout) linear forwards;
+}
+
+div.generator {
+    aspect-ratio: 1 / 1;
+}

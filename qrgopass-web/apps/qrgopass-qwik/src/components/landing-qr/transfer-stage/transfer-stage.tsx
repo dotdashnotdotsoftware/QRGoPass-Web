@@ -1,59 +1,27 @@
-import { component$, Signal, useSignal, useStylesScoped$, useVisibleTask$ } from '@builder.io/qwik';
-// @ts-expect-error - no types available for this package
-import QRCode from 'qrcode-esm';
-import { initialise, QRGoPassFailure, UserCredentials } from 'qrgopass-client'
-import styles from "./transfer-stage.css?inline"
+import { $, component$, Signal, useSignal, useStylesScoped$ } from '@builder.io/qwik';
+import { QRGoPassFailure, UserCredentials } from 'qrgopass-client'
 import { BackupKey } from 'qrgopass-client/dist/types';
+import { TransferActive } from './transfer-active';
+import { AppButton } from '~/components/app-button';
+import styles from './transfer-stage.css?inline';
 
-const QRGOPASS_WEB_CRYPTO_CODE = 5;
+
 
 export const TransferStage = component$(({ transferState }: { transferState: Signal<UserCredentials | QRGoPassFailure | BackupKey | null> }) => {
-    const qrCodeSvg = useSignal<string>('');
-    const qrCodeTimeout = useSignal<number>(0)
     useStylesScoped$(styles);
 
-    useVisibleTask$(async () => {
-        const session = await initialise();
+    const userReady = useSignal(false);
 
-        qrCodeTimeout.value = session.timeout;
-        const scanData = { V: QRGOPASS_WEB_CRYPTO_CODE, UUID: session.uuid, Data: { Key: session.base64EncodedPublicKey } };
-        QRCode.toString(JSON.stringify(scanData), { type: 'svg' })
-            .then((svg: string) => {
-                qrCodeSvg.value = svg;
-            })
-            .catch((err: any) => {
-                console.error('Failed to generate QR code:', err);
-            });
-
-        // Disable as needed for manual testing
-        // eslint-disable-next-line no-constant-condition
-        if (false) {
-
-            setTimeout(() => {
-                // transferState.value = {
-                //     userIdentifier: "username",
-                //     password: "pass"
-                // } satisfies UserCredentials
-
-                // transferState.value = {
-                //     failureReason: FailureReason.SUSPICIOUS_ACTIVITY
-                // }
-
-                // transferState.value = {
-                //     keyInfo: "Demo Key"
-                // }
-            }, 2000)
-        } else {
-            transferState.value = await session.getCredentials();
-        }
-    });
-
-    return <>
-        <h2>Waiting for connection from mobile app...</h2>
-        {qrCodeSvg.value ? (
-            <div style={{ ["--timeout"]: `${qrCodeTimeout.value / 1000}s` }} dangerouslySetInnerHTML={qrCodeSvg.value} />
-        ) : (
-            <div class="generator">Generating QR code...</div>
-        )}
-    </>
+    if (!userReady.value) {
+        return <>
+            <img src="/logo_128.png" alt="QRGoPass Logo" height={128} width={128} />
+            <h2>Your Credentials, Delivered Securely.</h2>
+            <div class="button-group">
+                <AppButton onClick$={$(() => userReady.value = true)} >
+                    Tap to Begin
+                </AppButton>
+            </div>
+        </>
+    }
+    return <TransferActive transferState={transferState} />
 });
