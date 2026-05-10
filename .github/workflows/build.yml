@@ -1,0 +1,19 @@
+name: Build with BuildKit
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Build using remote BuildKit
+        run: |
+          buildctl \
+            --addr "$BUILDKIT_ADDR" \
+            build \
+            --frontend dockerfile.v0 \
+            --local context=. \
+            --local dockerfile=. \
+            --output type=image,name=ghcr.io/dotdashnotdotsoftware/qrgo:latest,push=false
