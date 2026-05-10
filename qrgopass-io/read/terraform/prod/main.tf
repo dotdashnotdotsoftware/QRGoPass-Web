@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "5.99.1"
+      version = "6.44.0"
     }
   }
 
@@ -25,13 +25,13 @@ module "main" {
 }
 
 module "test" {
-  source = "../../../scratch-space/terraform/read-env-file"
+  source = "../../../../scratch-space/terraform/read-env-file"
 
-  env_path = "../../.devcontainer/.env"
+  env_path = "../../../../.devcontainer/qrgopass-io-read/.env"
 }
 
 module "mmp" {
-  source = "../../../scratch-space/terraform/major-minor-patch"
+  source = "../../../../scratch-space/terraform/major-minor-patch"
 
   version_string = module.test.env_object.NODE_VERSION
 }
