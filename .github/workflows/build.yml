@@ -16,6 +16,8 @@ jobs:
 
       - name: Build using remote BuildKit
         run: |
+          echo "Build using remote BuildKit complete"
+          echo "Address $BUILDKIT_ADDR"
           buildctl \
             --addr "$BUILDKIT_ADDR" \
             build \
